@@ -1,9 +1,9 @@
-const app = require('../src/index');
-const supertest = require('supertest')(app);
+const app = require('../src/app');
+const supertest = require('supertest');
 
 describe('GET - /foo', () => {
-    it('should return bar', async () => {
-        const response = await supertest.get('/foo');
-        expect(response.body.message).toBe('bar');
-    })
-})
+  it('should return bar', async () => {
+    const response = await supertest(app).get('/foo');
+    expect(response.body.message).toBe('bar');
+  });
+});
