@@ -3,7 +3,6 @@ on: [push, pull_request]
 
 jobs:
   test:
-    working-directory: ./server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -11,6 +10,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      working-directory: ./server
       - run: yarn --frozen-lockfile
       - run: yarn test
         env:
