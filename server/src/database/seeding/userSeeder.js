@@ -7,27 +7,19 @@ const _ = require('lodash');
 database.start();
 
 exports.seedPatient = async n => {
-  const users = [];
   for (let i = 0; i < n; i++) {
     const user = await genUser(ACCOUNT_TYPES.ACCOUNT_PATIENT);
-    users.push(user);
+    await database.knex('users').insert(user);
   }
-  await seed(users);
 };
 
 exports.seedDoctor = async n => {
   console.log(`iterative number: ${n}`);
-  const users = [];
   for (let i = 0; i < n; i++) {
     const user = await genUser(ACCOUNT_TYPES.ACCOUNT_DOCTOR);
-    users.push(user);
+    await database.knex('users').insert(user);
   }
-  await seed(users);
 };
-
-async function seed(users) {
-  await database.knex('users').insert(users);
-}
 
 async function genUser(accountType) {
   assert(
