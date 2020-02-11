@@ -14,6 +14,7 @@ describe('POST - /login', () => {
     await userSeeder.seedPatient();
     const user = await database.knex('users').first();
 
+    console.log(user);
     const response = await supertest.post('/login').send({
       username: user.username,
       password: process.env.DUMMY_PASSWORD
