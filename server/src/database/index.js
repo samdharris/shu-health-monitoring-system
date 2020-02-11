@@ -4,7 +4,8 @@ exports.start = () => {
   if (process.env.NODE_ENV === 'test') {
     this.knex = knex({
       client: 'sqlite',
-      connection: ':memory:'
+      connection: ':memory:',
+      useNullAsDefault: true
     });
   } else {
     this.knex = knex({

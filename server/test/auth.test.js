@@ -12,11 +12,7 @@ describe('POST - /login', () => {
   it('should login successfully', async () => {
     console.log(`env: ${process.env.NODE_ENV}`);
     await userSeeder.seedPatient();
-    const user = await database
-      .knex('users')
-      .select('username')
-      .where('account_type', constants.ACCOUNT_TYPES.ACCOUNT_PATIENT)
-      .first();
+    const user = await database.knex('users').first();
 
     const response = await supertest.post('/login').send({
       username: user.username,
