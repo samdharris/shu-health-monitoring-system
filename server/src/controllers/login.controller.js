@@ -1,12 +1,17 @@
 const loginValidation = require('../validation/login');
 const authenticatorService = require('../services/authenticatorService');
-
+const httpCodes = require('http-status-codes');
 exports.login = async (req, res) => {
-  // validate
-  const validatedData = await loginValidation.validateAsync(req.body);
-  // authenticate
-  const token = jwt.sign(validatedData.username, process.env.JWT_SECRET);
-  // send response
-  const response = authenticatorService.authenticate(validatedData);
-  res.json(response);
+  try {
+    // validate
+    const validatedData = await loginValidation.validateAsync(req.body);
+    // authenticate
+    const response = await authenticatorService.authenticate(validatedData);
+    // send
+    res.json(response);
+  } catch (error) {
+    res.status(httpCodes.BAD_REQUEST).json({
+      message: error.message
+    });
+  }
 };
