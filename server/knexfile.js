@@ -17,7 +17,9 @@ module.exports = {
   },
   test: {
     client: 'sqlite',
-    connection: ':memory:',
+    connection: {
+      filename: './database.sqlite'
+    },
     migrations: {
       tableName: 'knex_migrations',
       directory: './src/database/migrations'

@@ -13,6 +13,9 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
         working-directory: ./server
+      - name: Create Database
+        run: touch database.sqlite
+        working-directory: ./server
       - name: Run Migrations
         run: ./node_modules/.bin/knex migrate:latest
         env:
