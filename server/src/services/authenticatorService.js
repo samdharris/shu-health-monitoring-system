@@ -5,9 +5,10 @@ const bcrypt = require('bcryptjs');
 
 exports.authenticate = async validatedData => {
   try {
-    const user = database
+    const user = await database
       .knex('users')
-      .where('username', '=', validatedData.username);
+      .where('username', validatedData.username)
+      .first();
 
     if (_.isNil(user)) {
       throw new Error({
