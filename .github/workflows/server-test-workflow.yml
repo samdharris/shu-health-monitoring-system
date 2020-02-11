@@ -16,16 +16,14 @@ jobs:
       - name: Create Database
         run: touch database.sqlite
         working-directory: ./server
-      - name: Run Migrations
-        run: ./node_modules/.bin/knex migrate:latest
+      - name: Run Migrations & tests
+        run: |
+          ./node_modules/.bin/knex migrate:latest
+          yarn test
         env:
           NODE_ENV: test
-        working-directory: ./server
-      - name: Run Tests
-        run: yarn test
-        working-directory: ./server
-        env:
           CI: true
           DUMMY_PASSWORD: ${{ secrets.DUMMY_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           SALT_ROUNDS: 10
+        working-directory: ./server
