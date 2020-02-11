@@ -20,6 +20,12 @@ module.exports = {
     connection: {
       filename: './database.sqlite'
     },
+    pool: {
+      min: 1,
+      max: 1,
+      disposeTimeout: 360000 * 1000,
+      idleTimeoutMillis: 360000 * 1000
+    },
     migrations: {
       tableName: 'knex_migrations',
       directory: './src/database/migrations'
