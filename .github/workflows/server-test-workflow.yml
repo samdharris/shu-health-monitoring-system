@@ -21,6 +21,7 @@ jobs:
         working-directory: ./server
         env:
           CI: true
+          NODE_ENV: test
           DUMMY_PASSWORD: ${{ secrets.DUMMY_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           SALT_ROUNDS: 10
