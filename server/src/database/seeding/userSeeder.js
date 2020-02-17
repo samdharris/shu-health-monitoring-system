@@ -6,11 +6,12 @@ const database = require('../index');
 const _ = require('lodash');
 database.start();
 
-exports.seedPatient = async n => {
+exports.seedPatient = async (n = 1) => {
   for (let i = 0; i < n; i++) {
     const user = await genUser(ACCOUNT_TYPES.ACCOUNT_PATIENT);
     await database.knex('users').insert(user);
   }
+  console.log('users seeded!');
 };
 
 exports.seedDoctor = async n => {

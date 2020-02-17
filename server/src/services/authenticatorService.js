@@ -7,7 +7,7 @@ exports.authenticate = async validatedData => {
   try {
     const user = await database
       .knex('users')
-      .where('username', validatedData.username)
+      .where('email_address', validatedData.username)
       .first();
 
     if (_.isNil(user)) {
@@ -27,7 +27,7 @@ exports.authenticate = async validatedData => {
 
     user.password = undefined;
     return Promise.resolve({
-      accessToken: jwt.sign(user.id),
+      accessToken: jwt.sign({ userId: user.id }, process.env.JWT_SECRET),
       user
     });
   } catch (err) {
