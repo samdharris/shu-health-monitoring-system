@@ -6,12 +6,12 @@
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
-                <form>
+                <form @submit.prevent="onSubmit">
                     <div class="form-group">
-                        <input type="email" v-model="user.email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Email">
+                        <input type="email" v-model="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Email">
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                        <input type="password" v-model="password" class="form-control" id="passwordInput" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-primary" id="loginButton">Submit</button>
                 </form>
@@ -20,3 +20,17 @@
         </div>
     </div>
 </template>
+<script> 
+    export default {
+        data: function(){
+            return {email: "",
+                    password: ""}
+        },
+        methods: {
+            onSubmit(){
+                this.$store.dispatch("login", {email: this.email,
+                                            password: this.password})
+            }
+        }
+    }
+</script>
