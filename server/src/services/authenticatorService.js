@@ -11,18 +11,14 @@ exports.authenticate = async validatedData => {
       .first();
 
     if (_.isNil(user)) {
-      throw new Error({
-        message: 'User Not Found'
-      });
+      throw new Error('User not found');
     }
 
     // check passwords match
     const match = await bcrypt.compare(validatedData.password, user.password);
 
     if (!match) {
-      throw new Error({
-        message: "Passwords don't match"
-      });
+      throw new Error("Passwords don't match.");
     }
 
     user.password = undefined;
