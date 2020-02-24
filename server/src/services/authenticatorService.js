@@ -7,7 +7,7 @@ exports.authenticate = async validatedData => {
   try {
     const user = await database
       .knex('users')
-      .where('email_address', validatedData.username)
+      .where('email_address', validatedData.email)
       .first();
 
     if (_.isNil(user)) {
