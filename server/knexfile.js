@@ -15,6 +15,22 @@ module.exports = {
       directory: './src/database/migrations'
     }
   },
+  test: {
+    client: 'sqlite',
+    connection: {
+      filename: './database.sqlite'
+    },
+    pool: {
+      min: 1,
+      max: 1,
+      idleTimeoutMillis: 360000 * 1000
+    },
+    migrations: {
+      tableName: 'knex_migrations',
+      directory: './src/database/migrations'
+    },
+    useNullAsDefault: true
+  },
   production: {
     client: 'mysql',
     connection: {

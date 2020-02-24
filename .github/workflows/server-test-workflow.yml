@@ -13,8 +13,12 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
         working-directory: ./server
-      - name: Run Tests
-        run: yarn test
+      - name: Run tests
         working-directory: ./server
+        run: yarn test
         env:
+          NODE_ENV: test
           CI: true
+          DUMMY_PASSWORD: ${{ secrets.DUMMY_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          SALT_ROUNDS: 10
