@@ -1,9 +1,15 @@
+<style scoped>
+.navbar {
+  background-color: #fff;
+}
+</style>
+
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+  <div>
+    <nav class="navbar">
+      <a class="navbar-brand"><i class="fas fa-cog"></i></a>
+    </nav>
+    <font-awesome-icon icon="cog" />
     <router-view />
   </div>
 </template>
