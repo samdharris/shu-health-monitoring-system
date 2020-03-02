@@ -1,15 +1,10 @@
-<style scoped>
-.navbar {
-  background-color: #fff;
-}
-</style>
-
-<template>
+ <template>
   <div>
     <nav class="navbar">
-      <a class="navbar-brand"><i class="fas fa-cog"></i></a>
+      <a class="navbar-brand">
+        <i class="fas fa-cog"></i>
+      </a>
     </nav>
-    <font-awesome-icon icon="cog" />
     <router-view />
   </div>
 </template>
