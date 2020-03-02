@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  return knex.schema.createTable("glucose_level", table => {
+  return knex.schema.createTable("glucose_levels", table => {
     table.increments("id");
     table
       .bigInteger("medical_data_id")
@@ -13,5 +13,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists("glucose_level");
+  return knex.schema.dropTableIfExists("glucose_levels");
 };
