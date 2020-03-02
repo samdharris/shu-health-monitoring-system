@@ -1,5 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{
+    'inverted': $store.state.settings != {}
+  }"
+  :style="{
+    'font-size': $store.state.settings && $store.state.settings.textSize ? `${$store.state.settings.textSize}px` : `16px`
+  }">
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -30,3 +35,12 @@
   color: #42b983;
 }
 </style>
+<script>
+export default {
+  mounted() {
+    let settings = JSON.parse(localStorage.getItem("settings")) || {};
+    this.$store.dispatch("applySettings", settings)
+  }
+}
+</script>
+
