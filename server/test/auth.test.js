@@ -20,7 +20,7 @@ describe('POST - /login', () => {
     const user = await database.knex('users').first();
 
     const body = {
-      username: user.email_address,
+      email: user.email_address,
       password: process.env.DUMMY_PASSWORD
     };
 

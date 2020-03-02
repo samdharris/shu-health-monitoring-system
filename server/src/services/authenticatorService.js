@@ -7,22 +7,18 @@ exports.authenticate = async validatedData => {
   try {
     const user = await database
       .knex('users')
-      .where('email_address', validatedData.username)
+      .where('email_address', validatedData.email)
       .first();
 
     if (_.isNil(user)) {
-      throw new Error({
-        message: 'User Not Found'
-      });
+      throw new Error('User not found');
     }
 
     // check passwords match
     const match = await bcrypt.compare(validatedData.password, user.password);
 
     if (!match) {
-      throw new Error({
-        message: "Passwords don't match"
-      });
+      throw new Error("Passwords don't match.");
     }
 
     user.password = undefined;

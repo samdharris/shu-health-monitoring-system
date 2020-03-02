@@ -8,6 +8,8 @@ dotenv.config();
 
 const app = express();
 
+app.use(require('cors')());
+
 // Setup global middleware
 app.use(bodyParser.json());
 
