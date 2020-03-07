@@ -29,3 +29,35 @@ describe('POST - /login', () => {
     expect(response.body).toHaveProperty('accessToken');
   });
 });
+
+describe('POST - /verify', () => {
+  let data = {};
+  beforeAll(() => {
+    // Login the user
+    return userSeeder
+      .seedPatient()
+      .then(() => {
+        return database.knex('users').first();
+      })
+      .then(user => {
+        const body = {
+          email: user.email_address,
+          password: process.env.DUMMY_PASSWORD
+        };
+        supertest
+          .post('/login')
+          .send(body)
+          .then(({ body }) => {
+            data.token = body.accessToken;
+            data.user;
+          });
+      });
+  });
+  it('should return a valid user given a valid token', async done => {
+    const response = await supertest
+      .post('/verify')
+      .set(`Authorization`, `bearer ${data.token}`);
+    expect(response.status).toBe(200);
+    expect(response.user, done).toMatchObject(data.user);
+  });
+});
