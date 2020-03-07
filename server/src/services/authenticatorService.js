@@ -30,3 +30,23 @@ exports.authenticate = async validatedData => {
     return Promise.reject(err);
   }
 };
+
+exports.authenticateWithToken = async header => {
+  try {
+    if (_.isNil(header)) {
+      throw new Error('Missing Authorization header!');
+    }
+
+    const token = header.split(' ')[1].trim();
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await database
+      .knex('users')
+      .where('id', userId)
+      .first();
+    return Promise.resolve({
+      user
+    });
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
