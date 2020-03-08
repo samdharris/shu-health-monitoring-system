@@ -6,23 +6,19 @@ const database = require("../index");
 const _ = require("lodash");
 database.start();
 
-exports.seedHomeAddress = async (n = 1) => {
+exports.seedAddress = async (n = 1) => {
   for (let i = 0; i < n; i++) {
-    const address = await genaddress(ACCOUNT_TYPES.ACCOUNT_PATIENT);
+    const address = await genaddress();
     await database.knex("addresses").insert(address);
   }
-  console.log("Home Address seeded!");
+  console.log("Address seeded!");
 };
-exports.seedGPAddress = async (n = 1) => {
-  console.log("GP Address seeded!");
-};
-
-async function genUser(accountType) {
-  const address_line = faker.name.firstName();
-  const postcode = parseInt(process.env.SALT_ROUNDS);
+async function genaddress(accountType) {
+  const address_line = faker.address.streetAddress("###");
+  const postcode = faker.address.zipCode("###-###");
 
   return {
-    address_line: `${firstName} ${lastName}`,
-    postcode: "07777777777"
+    address_line: address_line,
+    postcode: postcode
   };
 }
