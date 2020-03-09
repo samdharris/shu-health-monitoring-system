@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Settings from '../views/Settings.vue';
 import DetailOverview from "../views/DetailOverview.vue";
 import _ from 'lodash';
 Vue.use(VueRouter);
@@ -24,6 +25,20 @@ const routes = [
     }
   },
   {
+    path: '/register',
+    component: Register,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/settings',
+    component: Settings,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
     path: "/about",
     name: "about",
     // route level code-splitting
@@ -36,7 +51,7 @@ const routes = [
     path: "/patients/:id",
     name: "patientDetails",
     component: DetailOverview
-  }
+  }   
 ];
 
 const router = new VueRouter({

@@ -7,16 +7,23 @@ import _ from 'lodash';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: { loggedInUser: {}, error: '' },
+  state: { loggedInUser: {}, error: '', settings: {} },
   mutations: {
     login(state, user) {
       state.loggedInUser = { ...user };
     },
     showError(state, error) {
       state.error = error;
+    },
+    applySettings(state, settings) {
+      state.settings = { ...settings };
     }
   },
   actions: {
+    applySettings({ commit }, settings) {
+      localStorage.setItem("settings", JSON.stringify(settings) );
+      commit("applySettings", settings);
+    },
     async login({ commit }, loginDetails) {
       try {
         const response = await axios.post(
