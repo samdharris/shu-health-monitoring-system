@@ -45,7 +45,11 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <font-awesome-icon icon="cog" class="cogIcon" onclick="location.href='#'" />
+        <font-awesome-icon
+          icon="cog"
+          class="cogIcon"
+          onclick="location.href='#'"
+        />
         <router-view />
       </div>
     </div>
@@ -54,7 +58,12 @@
         <h3>{{ $route.params.id }}</h3>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-outline-secondary appointBtn">Make an Appointment</button>
+        <router-link
+          to="/makeappointment"
+          class="btn btn-outline-secondary appointBtn"
+        >
+          Make an Appointment
+        </router-link>
       </div>
     </div>
 
@@ -89,7 +98,13 @@
         }"
         @click="toggle('glucose-metre')"
       >
-        <input type="radio" name="options" id="option3" autocomplete="off" checked />
+        <input
+          type="radio"
+          name="options"
+          id="option3"
+          autocomplete="off"
+          checked
+        />
         Glucose Metre
       </label>
     </div>
@@ -109,12 +124,12 @@
   </div>
 </template>
 <script>
-import LineChart from "./userChart";
+import LineChart from './userChart';
 
 export default {
   data() {
     return {
-      showElement: "patient-detail"
+      showElement: 'patient-detail'
     };
   },
   components: {

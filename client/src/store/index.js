@@ -17,6 +17,14 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async makeAppointment({ commit }, appointment) {
+      try {
+        await axios.post('/api/appointments', appointment);
+        router.push('/');
+      } catch (error) {
+        commit('showError', error.response.data.message);
+      }
+    },
     async login({ commit }, loginDetails) {
       try {
         const response = await axios.post(
