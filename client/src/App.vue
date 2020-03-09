@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar">
       <a class="navbar-brand">
-        <i class="fas fa-cog"></i>
+        <i class="fas fa-cog" aria-hidden="true"></i>
       </a>
     </nav>
     <router-view />
