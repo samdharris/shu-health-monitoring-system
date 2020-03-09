@@ -1,9 +1,10 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+ <template>
+  <div>
+    <nav class="navbar">
+      <a class="navbar-brand">
+        <i class="fas fa-cog" aria-hidden="true"></i>
+      </a>
+    </nav>
     <router-view />
   </div>
 </template>
