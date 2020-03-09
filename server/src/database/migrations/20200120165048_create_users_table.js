@@ -8,19 +8,6 @@ exports.up = function(knex) {
     table
       .enum("account_type", Object.values(ACCOUNT_TYPES))
       .default(ACCOUNT_TYPES.ACCOUNT_PATIENT);
-
-    table
-      .bigInteger("gp_id")
-      .unsigned()
-      .index()
-      .references("id")
-      .inTable("gp");
-    table
-      .bigInteger("address_id")
-      .unsigned()
-      .index()
-      .references("id")
-      .inTable("address");
     table.string("password", 255).notNullable();
     table.timestamps(true, true);
   });
