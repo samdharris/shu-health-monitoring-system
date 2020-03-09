@@ -1,23 +1,23 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
 import DetailOverview from "../views/DetailOverview.vue";
-import _ from 'lodash';
+import Connect from "../views/Connect.vue";
+import _ from "lodash";
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
+    path: "/",
+    name: "home",
     component: Home,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/login',
+    path: "/login",
     component: Login,
     meta: {
       requiresAuth: false
@@ -35,23 +35,34 @@ const routes = [
   {
     path: "/patients/:id",
     name: "patientDetails",
-    component: DetailOverview
+    component: DetailOverview,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/connect",
+    name: "connect",
+    component: Connect,
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
 });
 
 router.beforeEach((to, from, next) => {
   const routeRequiresAuth = to.matched.some(x => x.meta.requiresAuth);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (routeRequiresAuth && _.isNil(token)) {
-    next('/login');
+    next("/login");
   } else if (!routeRequiresAuth && !_.isNil(token)) {
-    next('/');
+    next("/");
   } else {
     next();
   }

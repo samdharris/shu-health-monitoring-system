@@ -24,6 +24,7 @@
 
 .btn-group {
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .cogIcon {
@@ -45,7 +46,11 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <font-awesome-icon icon="cog" class="cogIcon" onclick="location.href='#'" />
+        <font-awesome-icon
+          icon="cog"
+          class="cogIcon"
+          @click="$router.push('/settings')"
+        />
         <router-view />
       </div>
     </div>
@@ -54,7 +59,9 @@
         <h3>{{ $route.params.id }}</h3>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-outline-secondary appointBtn">Make an Appointment</button>
+        <button type="button" class="btn btn-outline-secondary appointBtn">
+          Make an Appointment
+        </button>
       </div>
     </div>
 
@@ -89,17 +96,23 @@
         }"
         @click="toggle('glucose-metre')"
       >
-        <input type="radio" name="options" id="option3" autocomplete="off" checked />
+        <input
+          type="radio"
+          name="options"
+          id="option3"
+          autocomplete="off"
+          checked
+        />
         Glucose Metre
       </label>
     </div>
 
-    <div v-if="showElement === 'patient-detail'">Patient Detail</div>
+    <div v-if="showElement === 'patient-detail'">Patient Details</div>
     <div v-if="showElement === 'fitbit-data'">
-      <line-chart></line-chart>
+      <line-chart :height="250"></line-chart>
     </div>
     <div v-if="showElement === 'glucose-metre'">
-      <line-chart></line-chart>
+      <line-chart :height="250"></line-chart>
     </div>
 
     <!-- Add "Updated just now bit down here" -->
