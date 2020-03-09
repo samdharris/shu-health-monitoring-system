@@ -1,8 +1,12 @@
 const app = require('../src/app');
 const supertest = require('supertest')(app);
 const userSeeder = require('../src/database/seeding/userSeeder');
+const integrationsSeeder = require('../src/database/seeding/integrationsSeeder');
 const database = require('../src/database');
+const { INTEGRATIONS } = require('../src/constants');
+
 const path = require('path');
+
 beforeAll(() => {
   database.start();
   /**
@@ -13,7 +17,7 @@ beforeAll(() => {
   });
 });
 
-describe('PUT - /api/integrations/1/data', () => {
+describe('POST - /api/integrations/1/data', () => {
   let data = {};
   beforeAll(() => {
     // Login the user
@@ -35,7 +39,10 @@ describe('PUT - /api/integrations/1/data', () => {
       });
   });
 
-  it('should be able to manually update a reading', async () => {
+  it('should be able to manually insert a reading', async () => {
+    await integrationsSeeder.seedIntegration(INTEGRATIONS[0]);
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedIntegrationData(1, data.user.id, 5.4);
     const response = await supertest
       .put('/api/integrations/1/data')
       .set('Authorization', `bearer ${data.token}`)
@@ -44,5 +51,6 @@ describe('PUT - /api/integrations/1/data', () => {
       });
 
     expect(response.status).toBe(201);
+    expect(response.body.integrationData.value).toBe(5.4);
   });
 });

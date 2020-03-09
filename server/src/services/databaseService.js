@@ -1,7 +1,7 @@
 const database = require('../database');
 const assert = require('assert');
 
-exports.updateData = async (tableName, referenceColumn, id, data) => {
+exports.updateData = async (userId, tableName, referenceColumn, id, data) => {
   assert(
     await database.knex.schema.hasTable(tableName),
     `Table: ${tableName} doesn't exist!`
@@ -12,6 +12,7 @@ exports.updateData = async (tableName, referenceColumn, id, data) => {
   );
   await database
     .knex(tableName)
+    .where('user_id', userId)
     .where(referenceColumn, id)
     .update(data);
 };

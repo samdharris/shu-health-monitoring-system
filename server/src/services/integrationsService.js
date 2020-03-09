@@ -1,5 +1,5 @@
 const integrationsRepository = require('../database/repositories/integrationsRepository');
 
-exports.updateIntegrationData = async (integrationId, data) => {
-  await integrationsRepository.updateData(integrationId, data);
+exports.updateIntegrationData = async (userId, integrationId, data) => {
+  await integrationsRepository.updateData(userId, integrationId, data);
 };
