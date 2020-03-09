@@ -18,6 +18,6 @@ exports.seedData = async n => {
         });
       }
       console.log("data seeded!");
-      return knex("data_integrations").insert(data_integrations);
+      return knex("integrations_data").insert(data_integrations);
     });
 };
