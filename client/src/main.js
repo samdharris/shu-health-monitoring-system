@@ -10,8 +10,10 @@ library.add(faUserSecret);
 library.add(faCog);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
+import { ValidationProvider } from 'vee-validate';
 
 Vue.config.productionTip = false;
+Vue.component('ValidationProvider', ValidationProvider);
 
 new Vue({
   router,
