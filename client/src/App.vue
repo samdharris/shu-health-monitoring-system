@@ -1,14 +1,16 @@
-<template>
+ <template>
   <div id="app" :class="{
     'inverted': $store.state.settings != {}
   }"
   :style="{
-    'font-size': $store.state.settings && $store.state.settings.textSize ? `${$store.state.settings.textSize}px` : `16px`
+    'font-size': $store.state.settings && $store.state.settings.textSize ? `${$store.state.settings.textSize}px` : `16px`, 
+    'filter': $store.state.settings && $store.state.settings.inverted ? `invert(100)` : `invert(0)`
   }">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav class="navbar">
+      <a class="navbar-brand">
+        <i class="fas fa-cog" aria-hidden="true"></i>
+      </a>
+    </nav>
     <router-view />
   </div>
 </template>
@@ -20,6 +22,8 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  filter: invert(100);
+  background: #FFFFFF;
 }
 
 #nav {
