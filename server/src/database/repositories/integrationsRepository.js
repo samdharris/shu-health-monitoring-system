@@ -12,6 +12,12 @@ exports.updateData = async (userId, integrationId, data) => {
   );
 };
 
+exports.addData = async (integrationId, value) =>
+  await databaseService.addData('integrations_data', {
+    user_integration_id: integrationId,
+    value
+  });
+
 exports.getUserIntegrations = async userId => {
   return await databaseService.getData('user_integrations', builder => {
     return builder

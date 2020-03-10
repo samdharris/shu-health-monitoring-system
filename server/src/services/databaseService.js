@@ -9,6 +9,13 @@ exports.getIntegrationForUser = async (userId, integrationId) => {
     .first();
 };
 
+exports.addData = async (table, values) => {
+  await database.knex(table).insert(values);
+  return await database
+    .knex(table)
+    .orderBy('id', 'desc')
+    .first();
+};
 exports.getData = async (table, query) => await query(database.knex(table));
 
 exports.updateData = async (
