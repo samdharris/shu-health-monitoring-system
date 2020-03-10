@@ -15,3 +15,14 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+exports.verify = async (req, res) => {
+  try {
+    const response = await authenticatorService.authenticateWithToken(
+      req.header('Authorization')
+    );
+    res.json(response);
+  } catch (error) {
+    res.status(httpCodes.UNAUTHORIZED).send();
+  }
+};
