@@ -7,13 +7,16 @@ import _ from 'lodash';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: { loggedInUser: {}, error: '' },
+  state: { loggedInUser: {}, error: '', settings: {} },
   mutations: {
     login(state, user) {
       state.loggedInUser = { ...user };
     },
     showError(state, error) {
       state.error = error;
+    },
+    applySettings(state, settings) {
+      state.settings = { ...settings };
     }
   },
   actions: {
@@ -24,6 +27,10 @@ export default new Vuex.Store({
       } catch (error) {
         commit('showError', error.response.data.message);
       }
+    },
+    applySettings({ commit }, settings) {
+      localStorage.setItem('settings', JSON.stringify(settings));
+      commit('applySettings', settings);
     },
     async login({ commit }, loginDetails) {
       try {

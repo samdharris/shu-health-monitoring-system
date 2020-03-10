@@ -11,9 +11,14 @@ library.add(faCog);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 import { ValidationProvider } from 'vee-validate';
+import VueSlideBar from 'vue-slide-bar';
+import { ToggleButton } from 'vue-js-toggle-button';
+
 
 Vue.config.productionTip = false;
 Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('VueSlideBar', VueSlideBar);
+Vue.component('ToggleButton', ToggleButton);
 
 new Vue({
   router,
