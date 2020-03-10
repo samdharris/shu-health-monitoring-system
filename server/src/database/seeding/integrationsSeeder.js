@@ -12,7 +12,7 @@ exports.seedIntegrations = async () => {
   }
 };
 
-exports.seedIntegrations = async integration => {
+exports.seedIntegration = async integration => {
   await database.knex('integrations').insert({
     name: integration
   });

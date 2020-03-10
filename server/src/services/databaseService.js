@@ -1,7 +1,20 @@
 const database = require('../database');
 const assert = require('assert');
 
-exports.updateData = async (userId, tableName, referenceColumn, id, data) => {
+exports.getIntegrationForUser = async (userId, integrationId) => {
+  return await database
+    .knex('user_integrations')
+    .where('user_id', userId)
+    .where('integration_id', integrationId)
+    .first();
+};
+
+exports.updateData = async (
+  tableName,
+  referenceColumn,
+  refColumnValue,
+  data
+) => {
   assert(
     await database.knex.schema.hasTable(tableName),
     `Table: ${tableName} doesn't exist!`
@@ -10,9 +23,14 @@ exports.updateData = async (userId, tableName, referenceColumn, id, data) => {
     await database.knex.schema.hasColumn(tableName, referenceColumn),
     `Column: ${referenceColumn} doesn't exist in table ${tableName}`
   );
+
   await database
     .knex(tableName)
-    .where('user_id', userId)
-    .where(referenceColumn, id)
+    .where(referenceColumn, refColumnValue)
     .update(data);
+
+  return await database
+    .knex(tableName)
+    .where(referenceColumn, refColumnValue)
+    .first();
 };

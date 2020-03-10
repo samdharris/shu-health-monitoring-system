@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 exports.updateData = async (req, res) => {
   try {
     const validatedData = await dataValidator.validateData(req.body);
-    const userId = jwt.decode(req.header('Authorization').split(' ')[1]);
+    const split = req.header('Authorization').split(' ');
+    const token = split[split.length - 1];
+    const { userId } = jwt.decode(token);
     const response = await integrationsService.updateIntegrationData(
       userId,
       req.params.integrationId,
