@@ -19,3 +19,16 @@ exports.updateData = async (req, res) => {
     res.status(httpCodes.BAD_REQUEST).send();
   }
 };
+
+exports.viewData = async (req, res) => {
+  try {
+    const split = req.header('Authorization').split(' ');
+    const token = split[split.length - 1];
+    const { userId } = jwt.decode(token);
+    const response = await integrationsService.getIntegrationsForUser(userId);
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(httpCodes.INTERNAL_SERVER_ERROR).send();
+  }
+};
