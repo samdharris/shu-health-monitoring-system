@@ -42,7 +42,10 @@ const routes = [
   {
     path: '/patients/:id',
     name: 'patientDetails',
-    component: DetailOverview
+    component: DetailOverview,
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 
