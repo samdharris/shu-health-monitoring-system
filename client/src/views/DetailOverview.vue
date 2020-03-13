@@ -57,9 +57,12 @@
         <h3>{{ $route.params.id }}</h3>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-outline-secondary appointBtn">
+        <router-link
+          to="/makeappointment"
+          class="btn btn-outline-secondary appointBtn"
+        >
           Make an Appointment
-        </button>
+        </router-link>
       </div>
     </div>
 

@@ -32,6 +32,14 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async makeAppointment({ commit }, appointment) {
+      try {
+        await axios.post('/api/appointments', appointment);
+        router.push('/');
+      } catch (error) {
+        commit('showError', error.response.data.message);
+      }
+    },
     applySettings({ commit }, settings) {
       localStorage.setItem('settings', JSON.stringify(settings));
       commit('applySettings', settings);
