@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import router from '../router';
-
+import moment from 'moment';
 import _ from 'lodash';
 Vue.use(Vuex);
 
@@ -12,7 +12,8 @@ export default new Vuex.Store({
     error: '',
     settings: {},
     loading: false,
-    userIntegrations: []
+    userIntegrations: [],
+    userToView: {}
   },
   mutations: {
     pushReading(state, data) {
@@ -44,6 +45,9 @@ export default new Vuex.Store({
     },
     setUserIntegrations(state, integrations) {
       state.userIntegrations = [...integrations];
+    },
+    setCurrentlyViewedUser(state, user) {
+      state.userToView = { ...user };
     }
   },
   actions: {
@@ -68,6 +72,24 @@ export default new Vuex.Store({
         }
       }
     },
+    async makeAppointment({ commit }, appointment) {
+      try {
+        await axios.post(
+          'http://localhost:3001/api/appointments',
+          appointment,
+          {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+        router.go(-1);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit('showError', err.response.data.message);
+        }
+      }
+    },
     applySettings({ commit }, settings) {
       localStorage.setItem('settings', JSON.stringify(settings));
       commit('applySettings', settings);
@@ -85,6 +107,31 @@ export default new Vuex.Store({
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
+      }
+    },
+    async getUser({ commit }, userId) {
+      try {
+        commit('setLoading', true);
+        const response = await axios.get(
+          `http://localhost:3001/api/users/${userId}`,
+          {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+
+        const user = {
+          ...response.data.user,
+          updated_at: moment(response.data.user.updated_at).fromNow()
+        };
+        commit('setCurrentlyViewedUser', user);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit('showError', err.response.data.message);
+        }
+      } finally {
+        commit('setLoading', false);
       }
     },
     async getIntegrations({ commit }) {
