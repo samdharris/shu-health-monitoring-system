@@ -139,6 +139,7 @@ import LineChart from './userChart';
 export default {
   data() {
     return {
+      interval: null,
       showElement: 'patient-detail'
     };
   },
@@ -151,9 +152,37 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('getUser', this.$route.params.id).then(() => {
-      this.$store.dispatch('getIntegrations');
-    });
+    this.$store
+      .dispatch('getUser', this.$route.params.id)
+      .then(() => {
+        return this.$store.dispatch('getIntegrations');
+      })
+      .then(() => {
+        const glucoseMetre = this.$store.state.userIntegrations.find(
+          integration => integration.slug === 'glucose-metre'
+        );
+
+        /**
+         * Every 10 seconds, generate a unique 2 piece value between 2 and 20
+         */
+        this.interval = setInterval(() => {
+          let value = ((Math.random() % 10) * 10).toPrecision(3);
+          do {
+            value = ((Math.random() % 10) * 10).toPrecision(3);
+          } while (value < 2 || value > 20);
+
+          // Fire a vuex action to record this in the database.
+          this.$store.dispatch('createReading', {
+            slug: glucoseMetre.slug,
+            userIntegrationId: glucoseMetre.integrationId,
+            value
+          });
+        }, 10 * 1000);
+      });
+  },
+  beforeDestory() {
+    // We're destroying the interval before the component is destroyed to stop anything bad from happening monkaS
+    clearInterval(this.interval);
   }
 };
 </script>

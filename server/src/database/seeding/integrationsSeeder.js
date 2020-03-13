@@ -20,11 +20,17 @@ exports.seedIntegration = async integration => {
 };
 
 exports.seedUserIntegration = async (integrationId, userId) => {
+  const serial = new Date().getTime().toString();
   await database.knex('user_integrations').insert({
     integration_id: integrationId,
     user_id: userId,
-    serial: new Date().getTime().toString()
+    serial
   });
+
+  return await database
+    .knex('user_integrations')
+    .where('serial', serial)
+    .first();
 };
 
 exports.seedIntegrationData = async (userIntegrationId, value) => {

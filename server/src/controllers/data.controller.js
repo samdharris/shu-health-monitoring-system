@@ -20,6 +20,19 @@ exports.updateData = async (req, res) => {
   }
 };
 
+exports.addData = async (req, res) => {
+  try {
+    const response = await integrationsService.addIntegrationData(
+      req.params.integrationId,
+      req.body.value
+    );
+    res.status(httpCodes.CREATED).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(httpCodes.BAD_REQUEST).send();
+  }
+};
+
 exports.viewData = async (req, res) => {
   try {
     const split = req.header('Authorization').split(' ');

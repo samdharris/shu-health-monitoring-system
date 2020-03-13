@@ -16,6 +16,21 @@ export default new Vuex.Store({
     userToView: {}
   },
   mutations: {
+    pushReading(state, data) {
+      const integration = state.userIntegrations.find(
+        i => i.slug === data.slug
+      );
+      if (_.isNil(integration.data)) {
+        integration.data = [data.value];
+      } else {
+        integration.data.push(data.value);
+      }
+
+      state.userIntegrations = [
+        ...state.userIntegrations.filter(i => i.slug !== data.slug), // <-- faceplam
+        integration
+      ];
+    },
     setLoading(state, loading) {
       state.loading = loading;
     },
@@ -36,6 +51,27 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async createReading({ commit }, data) {
+      try {
+        await axios.post(
+          `http://localhost:3001/api/integrations/${data.userIntegrationId}/data`,
+          {
+            value: data.value
+          },
+          {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+
+        commit('pushReading', { slug: data.slug, value: data.value });
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit('showError', err.response.data.message);
+        }
+      }
+    },
     async makeAppointment({ commit }, appointment) {
       try {
         await axios.post(
@@ -47,10 +83,11 @@ export default new Vuex.Store({
             }
           }
         );
-        // go back
         router.go(-1);
-      } catch (error) {
-        commit('showError', error.response.data.message);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit('showError', err.response.data.message);
+        }
       }
     },
     applySettings({ commit }, settings) {

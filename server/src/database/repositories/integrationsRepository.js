@@ -11,10 +11,21 @@ exports.updateData = async (userId, integrationId, data) => {
     data
   );
 };
+
+exports.addData = async (integrationId, value) =>
+  await databaseService.addData('integrations_data', {
+    user_integration_id: integrationId,
+    value
+  });
+
 exports.getUserIntegrations = async userId => {
   return await databaseService.getData('user_integrations', builder => {
     return builder
-      .select('integrations.*', 'user_integrations.serial')
+      .select(
+        'integrations.*',
+        'user_integrations.serial',
+        'user_integrations.id as integrationId'
+      )
       .where('user_integrations.user_id', userId)
       .innerJoin('integrations', function() {
         this.on('integrations.id', '=', 'user_integrations.integration_id');

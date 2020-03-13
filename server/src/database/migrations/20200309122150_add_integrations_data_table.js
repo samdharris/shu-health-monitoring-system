@@ -11,7 +11,7 @@ exports.up = function(knex) {
       .inTable('user_integrations');
 
     table
-      .integer('value')
+      .float('value', 3)
       .unsigned()
       .notNullable();
     table.timestamps(true, true);
