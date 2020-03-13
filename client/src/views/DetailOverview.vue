@@ -45,8 +45,11 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <font-awesome-icon icon="cog" class="cogIcon" onclick="location.href='#'" />
-        <router-view />
+        <font-awesome-icon
+          icon="cog"
+          class="cogIcon"
+          onclick="location.href='#'"
+        />
       </div>
     </div>
     <div class="row">
@@ -54,7 +57,9 @@
         <h3>{{ $route.params.id }}</h3>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-outline-secondary appointBtn">Make an Appointment</button>
+        <button type="button" class="btn btn-outline-secondary appointBtn">
+          Make an Appointment
+        </button>
       </div>
     </div>
 
@@ -68,37 +73,34 @@
           active: showElement === 'patient-detail'
         }"
         @click="toggle('patient-detail')"
+        >Patient Details</label
       >
-        <input type="radio" name="options" id="option1" autocomplete="off" />
-        Patient Details
-      </label>
       <label
-        @click="toggle('fitbit-data')"
+        v-for="integration in $store.state.userIntegrations"
+        :key="integration.id"
         :class="{
           'btn btn-outline-info patientBtn': true,
-          active: showElement === 'fitbit-data'
+          active: showElement === integration.slug
         }"
+        @click="toggle(integration.slug)"
       >
-        <input type="radio" name="options" id="option2" autocomplete="off" />
-        Fitbit Data
-      </label>
-      <label
-        :class="{
-          'btn btn-outline-info patientBtn': true,
-          active: showElement === 'glucose-metre'
-        }"
-        @click="toggle('glucose-metre')"
-      >
-        <input type="radio" name="options" id="option3" autocomplete="off" checked />
-        Glucose Metre
+        <input
+          type="radio"
+          name="options"
+          :id="`option-${integration.slug}`"
+          autocomplete="off"
+        />
+        {{ integration.name }}
       </label>
     </div>
 
     <div v-if="showElement === 'patient-detail'">Patient Detail</div>
-    <div v-if="showElement === 'fitbit-data'">
-      <line-chart></line-chart>
-    </div>
-    <div v-if="showElement === 'glucose-metre'">
+    <div
+      v-for="integration in $store.state.userIntegrations"
+      :key="integration.id"
+      v-show="showElement === integration.slug"
+    >
+      <p>Device serial number: {{ integration.serial }}</p>
       <line-chart></line-chart>
     </div>
 
@@ -109,12 +111,12 @@
   </div>
 </template>
 <script>
-import LineChart from "./userChart";
+import LineChart from './userChart';
 
 export default {
   data() {
     return {
-      showElement: "patient-detail"
+      showElement: 'patient-detail'
     };
   },
   components: {
@@ -124,6 +126,9 @@ export default {
     toggle(elementToShow) {
       this.showElement = elementToShow;
     }
+  },
+  mounted() {
+    this.$store.dispatch('getIntegrations');
   }
 };
 </script>
