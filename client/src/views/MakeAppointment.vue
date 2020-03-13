@@ -44,6 +44,7 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import moment from 'moment';
 
 export default {
   data() {
@@ -59,7 +60,7 @@ export default {
     onSubmit() {
       this.$store
         .dispatch('makeAppointment', {
-          date: this.date.toISOString(),
+          appointment_date: moment(this.date).format('YYYY-MM-DD hh:mm:ss'),
           reason: this.reason
         })
         .then(() => {

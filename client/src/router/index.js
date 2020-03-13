@@ -28,7 +28,7 @@ const routes = [
     path: '/makeappointment',
     component: MakeAppointment,
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   },
   {
