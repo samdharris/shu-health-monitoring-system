@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
+import Settings from '../views/Settings.vue';
 import DetailOverview from '../views/DetailOverview.vue';
 import MakeAppointment from '../views/MakeAppointment.vue';
 import _ from 'lodash';
@@ -31,6 +32,13 @@ const routes = [
     }
   },
   {
+    path: '/settings',
+    component: Settings,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
@@ -42,7 +50,10 @@ const routes = [
   {
     path: '/patients/:id',
     name: 'patientDetails',
-    component: DetailOverview
+    component: DetailOverview,
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 
