@@ -2,3 +2,5 @@ exports.ACCOUNT_TYPES = {
   ACCOUNT_PATIENT: 'ACCOUNT_PATIENT',
   ACCOUNT_DOCTOR: 'ACCOUNT_DOCTOR'
 };
+
+exports.INTEGRATIONS = ['FitBit', 'Glucose Metre'];
