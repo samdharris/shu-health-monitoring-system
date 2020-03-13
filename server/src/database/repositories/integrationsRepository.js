@@ -11,7 +11,6 @@ exports.updateData = async (userId, integrationId, data) => {
     data
   );
 };
-
 exports.getUserIntegrations = async userId => {
   return await databaseService.getData('user_integrations', builder => {
     return builder

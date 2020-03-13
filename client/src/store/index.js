@@ -36,6 +36,23 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async makeAppointment({ commit }, appointment) {
+      try {
+        await axios.post(
+          'http://localhost:3001/api/appointments',
+          appointment,
+          {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+        // go back
+        router.go(-1);
+      } catch (error) {
+        commit('showError', error.response.data.message);
+      }
+    },
     applySettings({ commit }, settings) {
       localStorage.setItem('settings', JSON.stringify(settings));
       commit('applySettings', settings);

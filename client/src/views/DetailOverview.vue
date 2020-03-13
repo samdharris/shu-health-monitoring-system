@@ -58,12 +58,14 @@
           <h3>{{ $store.state.userToView.name }}</h3>
         </div>
         <div class="col">
-          <button type="button" class="btn btn-outline-secondary appointBtn">
+          <router-link
+            to="/makeappointment"
+            class="btn btn-outline-secondary appointBtn"
+          >
             Make an Appointment
-          </button>
+          </router-link>
         </div>
       </div>
-
       <hr />
 
       <!-- Patient Buttons -->

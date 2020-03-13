@@ -1,5 +1,9 @@
 const database = require('../database');
 const assert = require('assert');
+exports.addData = async (table, values) => {
+  await database.knex(table).insert(values);
+  return await database.knex(table).orderBy('id', 'desc');
+};
 
 exports.getIntegrationForUser = async (userId, integrationId) => {
   return await database
