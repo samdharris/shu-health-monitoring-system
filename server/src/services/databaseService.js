@@ -9,6 +9,8 @@ exports.getIntegrationForUser = async (userId, integrationId) => {
     .first();
 };
 
+exports.getData = async (table, query) => await query(database.knex(table));
+
 exports.updateData = async (
   tableName,
   referenceColumn,

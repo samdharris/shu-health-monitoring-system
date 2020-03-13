@@ -55,3 +55,45 @@ describe('POST - /api/integrations/1/data', () => {
     expect(response.body.value).toBe(updatedValue);
   });
 });
+
+describe('GET - /api/integrations', () => {
+  let data = {};
+  beforeAll(() => {
+    // Login the user
+    return userSeeder
+      .seedPatient()
+      .then(() => {
+        return database.knex('users').first();
+      })
+      .then(user => {
+        const body = {
+          email: user.email_address,
+          password: process.env.DUMMY_PASSWORD
+        };
+        return supertest.post('/login').send(body);
+      })
+      .then(({ body }) => {
+        data.token = body.accessToken;
+        data.user = body.user;
+      });
+  });
+
+  beforeEach(() => {
+    return database.knex('user_integrations').truncate();
+  });
+
+  it('should return all integrations for a given user', async () => {
+    INTEGRATIONS.forEach(
+      async integration => await integrationsSeeder.seedIntegration(integration)
+    );
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedUserIntegration(2, data.user.id);
+
+    const response = await supertest
+      .get('/api/integrations')
+      .set(`Authorization`, `bearer ${data.token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.integrations).toHaveLength(2);
+  });
+});
