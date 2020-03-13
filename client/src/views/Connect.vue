@@ -30,11 +30,7 @@ h2 {
   <div class="container">
     <div class="row">
       <div class="col">
-        <font-awesome-icon
-          icon="arrow-left"
-          class="arrowLeftIcon"
-          @click="$router.go(-1)"
-        />
+        <font-awesome-icon icon="arrow-left" class="arrowLeftIcon" @click="$router.go(-1)" />
         <router-view />
       </div>
       <div class="col">
@@ -46,9 +42,9 @@ h2 {
 
     <h2>"Janet's FitBit"</h2>
     <div class="d-flex justify-content-center">
-      <spinner class="spinner" :color="black"></spinner>
-      <spinner class="spinner" :color="black"></spinner>
-      <spinner class="spinner" :color="black"></spinner>
+      <spinner class="spinner"></spinner>
+      <spinner class="spinner"></spinner>
+      <spinner class="spinner"></spinner>
     </div>
   </div>
 </template>

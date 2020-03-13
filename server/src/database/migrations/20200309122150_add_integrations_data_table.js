@@ -14,6 +14,7 @@ exports.up = function(knex) {
       .integer('value')
       .unsigned()
       .notNullable();
+    table.timestamps(true, true);
   });
 };
 
