@@ -17,7 +17,7 @@
           <tbody>
             <tr v-for="(item, index) in $store.state.patients" :key="index">
               <td v-for="(column, indexColumn) in columns" :key="indexColumn">
-                {{ item[column] }}
+                <a v-bind:href="'/patients/' + item.id">{{ item[column] }} </a>
               </td>
             </tr>
           </tbody>
