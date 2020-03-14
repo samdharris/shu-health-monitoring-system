@@ -137,11 +137,11 @@ export default new Vuex.Store({
         commit('setLoading', false);
       }
     },
-    async getIntegrations({ commit }) {
+    async getIntegrations({ commit }, userId) {
       try {
         commit('setLoading', true);
         const response = await axios.get(
-          'http://localhost:3001/api/integrations',
+          `http://localhost:3001/api/users/${userId}/integrations`,
           {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`
