@@ -35,6 +35,7 @@
   margin-bottom: 10px;
   font-size: 30px;
   cursor: pointer;
+  color: #000;
 }
 
 #app {
