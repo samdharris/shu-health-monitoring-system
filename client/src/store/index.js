@@ -175,11 +175,7 @@ export default new Vuex.Store({
             }
           }
         );
-        const patients = response.data.Patients.map(patient => {
-          return {
-            ...patient
-          };
-        });
+        const patients = response.data.Patients;
         commit("setDocPatients", patients);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
