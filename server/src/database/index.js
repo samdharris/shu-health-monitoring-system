@@ -12,7 +12,7 @@ exports.start = () => {
       client: 'mysql',
       connection: {
         host: process.env.DB_HOST,
-        port: process.env.port || 3306,
+        port: process.env.DB_PORT || 3306,
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DATABASE
