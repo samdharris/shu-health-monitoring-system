@@ -151,7 +151,7 @@ export default {
           let value = ((Math.random() % 10) * 10).toPrecision(3);
           do {
             value = ((Math.random() % 10) * 10).toPrecision(3);
-          } while (value < 2 || value > 20);
+          } while (value < 2 || value > 10);
 
           // Fire a vuex action to record this in the database.
           this.$store.dispatch('createReading', {
@@ -159,7 +159,7 @@ export default {
             userIntegrationId: glucoseMetre.integrationId,
             value
           });
-        }, 10 * 1000);
+        }, 60 * 1000 * 2);
       });
   },
   beforeDestory() {
