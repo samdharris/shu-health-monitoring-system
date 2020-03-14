@@ -43,6 +43,7 @@ async function genUser(accountType) {
     phone_number: '07777777777',
     email_address: faker.internet.email(firstName, lastName),
     account_type: ACCOUNT_TYPES[accountType],
+    address_id: accountType === ACCOUNT_TYPES.ACCOUNT_PATIENT ? 1 : 2,
     password
   };
 }
