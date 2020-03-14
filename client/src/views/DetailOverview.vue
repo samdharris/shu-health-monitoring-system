@@ -138,7 +138,20 @@
         :key="integration.id"
         v-show="showElement === integration.slug"
       >
-        <p>Device serial number: {{ integration.serial }}</p>
+        <div class="row align-items-center">
+          <div class="col-6">
+            <p>Device serial number: {{ integration.serial }}</p>
+          </div>
+          <div class="col-6">
+            <router-link
+              :to="`/integrations/${integration.integrationId}/edit`"
+              v-if="integration.data.length > 0"
+              class="btn btn-outline-secondary appointBtn"
+            >
+              Edit Data
+            </router-link>
+          </div>
+        </div>
         <line-chart></line-chart>
       </div>
     </div>

@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Settings from '../views/Settings.vue';
 import DetailOverview from '../views/DetailOverview.vue';
 import MakeAppointment from '../views/MakeAppointment.vue';
+import EditData from '../views/EditData.vue';
 import _ from 'lodash';
 Vue.use(VueRouter);
 
@@ -51,6 +52,13 @@ const routes = [
     path: '/patients/:id',
     name: 'patientDetails',
     component: DetailOverview,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/integrations/:integrationId/edit',
+    component: EditData,
     meta: {
       requiresAuth: true
     }
