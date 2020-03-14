@@ -125,7 +125,10 @@ export default new Vuex.Store({
           ...response.data.user,
           updated_at: moment(response.data.user.updated_at).fromNow()
         };
-        commit('setCurrentlyViewedUser', user);
+        commit('setCurrentlyViewedUser', {
+          address: response.data.address,
+          ...user
+        });
       } catch (err) {
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
