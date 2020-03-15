@@ -4,6 +4,7 @@ const userSeeder = require("../src/database/seeding/userSeeder");
 const integrationsSeeder = require("../src/database/seeding/integrationsSeeder");
 const database = require("../src/database");
 const { INTEGRATIONS } = require("../src/constants");
+const { ACCOUNT_TYPES } = require("../src/constants");
 
 const path = require("path");
 
@@ -20,41 +21,46 @@ beforeAll(() => {
 describe(`GET - /api/patients/1`, () => {
   let data = {};
   beforeAll(() => {
-    // Login the user and seed doctor plus patient
-
-    return userSeeder.seedDoctor(1).then(
-     doc = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_DOCTOR)
-      .first().then(
-    await userSeeder.seedPatient(1, doc.id).then(
-     user = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_PATIENT)
-      .first()
-      .then(() => {
-        return database.knex("users").first();
-      })
-      .then(user => {
-        const body = {
-          email: user.email_address,
-          password: process.env.DUMMY_PASSWORD
-        };
-        return supertest.post("/login").send(body);
-      })
-      .then(({ body }) => {
-        data.token = body.accessToken;
-        data.user = body.user;
-      }))));
+    // Login the user
+    return (
+      userSeeder
+        //.seedPatient()
+        .seedDoctor(1)
+        .then(() => {
+          return database.knex("users").first();
+        })
+        .then(user => {
+          const body = {
+            email: user.email_address,
+            password: process.env.DUMMY_PASSWORD
+          };
+          return supertest.post("/login").send(body);
+        })
+        .then(({ body }) => {
+          data.token = body.accessToken;
+          data.user = body.user;
+        })
+    );
   });
 
   it("should return a user successfully", async () => {
-    const user = await database.knex("users").first();
+    await userSeeder.seedDoctor(1);
+    const doc = await database
+      .knex("users")
+      .where("account_type", ACCOUNT_TYPES.ACCOUNT_DOCTOR)
+      .first();
+    await userSeeder.seedPatient(1, doc.id);
+    const patient = await database
+      .knex("users")
+      .where("account_type", ACCOUNT_TYPES.ACCOUNT_PATIENT)
+      .first();
+
     const response = await supertest
-      .get(`/api/patients/1`)
+      .get(`/api/patients/${doc.id}`)
       .set("Authorization", `bearer ${data.token}`);
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("user");
-    expect(response.body.user).toMatchObject(user);
+    expect(response.body).toHaveProperty("Patients");
+    console.log(response.body.Patients);
+    expect(response.body.Patients[0]).toMatchObject(patient);
   });
 });
