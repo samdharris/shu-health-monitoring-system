@@ -1,7 +1,7 @@
 const app = require('../src/app');
 const supertest = require('supertest')(app);
 const userSeeder = require('../src/database/seeding/userSeeder');
-const integrationsSeeder = require('../src/database/seeding/integrationsSeeder');
+const addressSeeder = require('../src/database/seeding/addressSeeder');
 const database = require('../src/database');
 const { INTEGRATIONS } = require('../src/constants');
 
@@ -40,12 +40,22 @@ describe(`GET - /api/users/1`, () => {
   });
 
   it('should return the user successfully', async () => {
+    await addressSeeder.seedAddress(1);
     const user = await database.knex('users').first();
+    const address = await database
+      .knex('addresses')
+      .where('id', user.address_id)
+      .first();
+    const expected = {
+      user,
+      address
+    };
     const response = await supertest
       .get(`/api/users/1`)
       .set('Authorization', `bearer ${data.token}`);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('user');
-    expect(response.body.user).toMatchObject(user);
+    expect(response.body).toHaveProperty('address');
+    expect(response.body).toMatchObject(expected);
   });
 });

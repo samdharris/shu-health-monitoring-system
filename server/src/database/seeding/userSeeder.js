@@ -44,6 +44,7 @@ async function genUser(accountType, userId) {
     email_address: faker.internet.email(firstName, lastName),
     account_type: ACCOUNT_TYPES[accountType],
     doctor_id: userId,
+    address_id: accountType === ACCOUNT_TYPES.ACCOUNT_PATIENT ? 1 : 2,
     password
   };
 }
