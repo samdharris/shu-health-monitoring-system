@@ -9,6 +9,11 @@ exports.up = function(knex) {
       .enum("account_type", Object.values(ACCOUNT_TYPES))
       .default(ACCOUNT_TYPES.ACCOUNT_PATIENT);
     table.string("password", 255).notNullable();
+    table.integer("doctor_id").unsigned();
+    table
+      .foreign("doctor_id")
+      .references("id")
+      .inTable("users");
     table.timestamps(true, true);
   });
 };
