@@ -33,13 +33,16 @@
 export default {
   data() {
     return {
-      columns: ["name", "phone_number", "email_address"]
+      /**
+       * Contains the columns being used to display the user list
+       */
+      columns: ['name', 'phone_number', 'email_address']
     };
   },
 
   mounted() {
-    this.$store.dispatch("getUser", this.$route.params.id).then(() => {
-      this.$store.dispatch("getDocPatients", this.$route.params.id);
+    this.$store.dispatch('getUser', this.$route.params.id).then(() => {
+      this.$store.dispatch('getDocPatients', this.$route.params.id);
     });
   }
 };

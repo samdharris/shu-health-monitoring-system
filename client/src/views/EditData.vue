@@ -65,7 +65,16 @@
 <script>
 export default {
   data() {
-    return { selectedRecordId: 'no', selectedRecordValue: null };
+    return {
+      /**
+       * Contains the currently selected reading that's being editted
+       */
+      selectedRecordId: 'no',
+      /**
+       * Contaisn the currently selected reading's value
+       */
+      selectedRecordValue: null
+    };
   },
   mounted() {
     this.$store.dispatch(
@@ -74,6 +83,12 @@ export default {
     );
   },
   watch: {
+    /**
+     * Whenever the user chooses a different reading to edit, we want to make sure we're showing the right reading in
+     * the input.
+     *
+     * @param {Number|String} newValue
+     */
     selectedRecordId: function(newValue) {
       if (newValue !== null && newValue !== 'no') {
         this.selectedRecordValue = this.$store.state.currentlyViewedIntegrationData.find(
@@ -83,7 +98,13 @@ export default {
     }
   },
   methods: {
+    /**
+     * Handles the form submission
+     */
     onSubmit() {
+      /**
+       * We don't want to sending an empty body!
+       */
       if (this.selectedRecordId === 'no' || this.selectedRecordId === null) {
         return;
       }
