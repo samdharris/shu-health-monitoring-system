@@ -4,7 +4,8 @@
       Using <code>$bvModal</code> Methods
     </template>
     <div class="d-block text-center">
-      <h3>Hello From This Modal!</h3>
+      <h3>Alert</h3>
+      <p>Your blood sugar levels are low</p>
     </div>
     <b-button
       class="mt-3"
