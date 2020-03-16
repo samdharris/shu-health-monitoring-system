@@ -1,5 +1,8 @@
 // Update with your config settings.
 require('dotenv').config();
+/**
+ * Knex.js CLI configuration
+ */
 module.exports = {
   development: {
     client: 'mysql',
