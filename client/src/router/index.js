@@ -67,7 +67,8 @@ const routes = [
     name: "patientList",
     component: PatientList,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      canViewWithAuth: true
     }
   },
   {
