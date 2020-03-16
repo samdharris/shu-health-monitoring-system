@@ -1,18 +1,19 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
-import Settings from "../views/Settings.vue";
-import DetailOverview from "../views/DetailOverview.vue";
-import MakeAppointment from "../views/MakeAppointment.vue";
-import PatientList from "../views/PatientList.vue";
-import _ from "lodash";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
+import Login from '../views/Login.vue';
+import Settings from '../views/Settings.vue';
+import DetailOverview from '../views/DetailOverview.vue';
+import MakeAppointment from '../views/MakeAppointment.vue';
+import PatientList from '../views/PatientList.vue';
+import EditData from '../views/EditData.vue';
+import _ from 'lodash';
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "home",
+    path: '/',
+    name: 'home',
     component: Home,
     meta: {
       requiresAuth: true,
@@ -20,7 +21,7 @@ const routes = [
     }
   },
   {
-    path: "/login",
+    path: '/login',
     component: Login,
     meta: {
       requiresAuth: false,
@@ -28,7 +29,7 @@ const routes = [
     }
   },
   {
-    path: "/makeappointment",
+    path: '/makeappointment',
     component: MakeAppointment,
     meta: {
       requiresAuth: true,
@@ -36,7 +37,7 @@ const routes = [
     }
   },
   {
-    path: "/settings",
+    path: '/settings',
     component: Settings,
     meta: {
       requiresAuth: false,
@@ -55,13 +56,13 @@ const routes = [
   {
     path: '/integrations/:integrationId/edit',
     component: EditData,
-        meta: {
+    meta: {
       requiresAuth: true
     }
   },
   {
-    path: "/doctor/:id",
-    name: "patientList",
+    path: '/doctor/:id',
+    name: 'patientList',
     component: PatientList,
     meta: {
       requiresAuth: true
@@ -70,7 +71,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 });

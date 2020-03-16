@@ -134,15 +134,19 @@
             </router-link>
           </div>
         </div>
-        <line-chart></line-chart>
+        <line-chart
+          v-if="integration"
+          :chartdata="generateChartData(integration.data)"
+        ></line-chart>
       </div>
     </div>
     <div v-else>Loading...</div>
   </div>
 </template>
 <script>
+import moment from 'moment';
 import LineChart from './userChart';
-
+import _ from 'lodash';
 export default {
   data() {
     return {
@@ -156,6 +160,19 @@ export default {
   methods: {
     toggle(elementToShow) {
       this.showElement = elementToShow;
+    },
+    generateChartData(integrationData) {
+      return {
+        labels: _.map(integrationData, d =>
+          moment(d.created_at).format('dddd, MMMM Do YYYY, h:mm a')
+        ),
+        datasets: _.map(integrationData, d => {
+          return {
+            label: moment(d.created_at).format('dddd, MMMM Do YYYY, h:mm a'),
+            data: [d.value]
+          };
+        })
+      };
     }
   },
   mounted() {
