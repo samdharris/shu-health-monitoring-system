@@ -5,11 +5,7 @@ const jwt = require('jsonwebtoken');
 exports.updateData = async (req, res) => {
   try {
     const validatedData = await dataValidator.validateData(req.body);
-    const split = req.header('Authorization').split(' ');
-    const token = split[split.length - 1];
-    const { userId } = jwt.decode(token);
     const response = await integrationsService.updateIntegrationData(
-      userId,
       req.params.integrationId,
       validatedData
     );
@@ -35,10 +31,9 @@ exports.addData = async (req, res) => {
 
 exports.viewData = async (req, res) => {
   try {
-    const split = req.header('Authorization').split(' ');
-    const token = split[split.length - 1];
-    const { userId } = jwt.decode(token);
-    const response = await integrationsService.getIntegrationsForUser(userId);
+    const response = await integrationsService.getIntegrationsForUser(
+      req.params.userId
+    );
     res.json(response);
   } catch (error) {
     console.error(error);
