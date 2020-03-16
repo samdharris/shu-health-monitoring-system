@@ -8,6 +8,7 @@ import Connect from "../views/Connect.vue";
 import Features from "../views/Features.vue";
 import MakeAppointment from "../views/MakeAppointment.vue";
 import PatientList from "../views/PatientList.vue";
+import EditData from "../views/EditData.vue";
 import _ from "lodash";
 Vue.use(VueRouter);
 
