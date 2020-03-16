@@ -34,6 +34,6 @@ exports.getDataForIntegration = async userIntegrationId => {
     return builder
       .select('*')
       .where('user_integration_id', userIntegrationId)
-      .orderBy('created_at', 'desc');
+      .orderBy('created_at', 'asc');
   });
 };

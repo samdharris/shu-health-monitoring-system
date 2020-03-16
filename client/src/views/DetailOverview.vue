@@ -135,20 +135,26 @@
             </router-link>
           </div>
         </div>
-        <line-chart></line-chart>
+        <line-chart
+          v-if="integration"
+          :chart-data="generateChartData(integration.data)"
+          :chart-options="chartOptions"
+        ></line-chart>
       </div>
     </div>
     <div v-else>Loading...</div>
   </div>
 </template>
 <script>
-import LineChart from "./userChart";
-
+import moment from 'moment';
+import LineChart from './userChart';
+import _ from 'lodash';
 export default {
   data() {
     return {
+      chartOptions: {},
       interval: null,
-      showElement: "patient-detail"
+      showElement: 'patient-detail'
     };
   },
   components: {
@@ -157,17 +163,30 @@ export default {
   methods: {
     toggle(elementToShow) {
       this.showElement = elementToShow;
+    },
+    generateChartData(integrationData) {
+      return {
+        labels: _.map(integrationData, d =>
+          moment(d.created_at).format('dddd, MMMM Do YYYY, h:mm')
+        ),
+        datasets: _.map(integrationData, d => {
+          return {
+            label: moment(d.created_at).format('dddd, MMMM Do YYYY, h:mm'),
+            data: [d.value]
+          };
+        })
+      };
     }
   },
   mounted() {
     this.$store
-      .dispatch("getUser", this.$route.params.id)
+      .dispatch('getUser', this.$route.params.id)
       .then(() => {
-        return this.$store.dispatch("getIntegrations", this.$route.params.id);
+        return this.$store.dispatch('getIntegrations', this.$route.params.id);
       })
       .then(() => {
         const glucoseMetre = this.$store.state.userIntegrations.find(
-          integration => integration.slug === "glucose-metre"
+          integration => integration.slug === 'glucose-metre'
         );
 
         /**
@@ -180,7 +199,7 @@ export default {
           } while (value < 2 || value > 10);
 
           // Fire a vuex action to record this in the database.
-          this.$store.dispatch("createReading", {
+          this.$store.dispatch('createReading', {
             slug: glucoseMetre.slug,
             userIntegrationId: glucoseMetre.integrationId,
             value

@@ -1,15 +1,15 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import axios from "axios";
-import router from "../router";
-import moment from "moment";
-import _ from "lodash";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
+import router from '../router';
+import moment from 'moment';
+import _ from 'lodash';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     loggedInUser: {},
-    error: "",
+    error: '',
     settings: {},
     loading: false,
     userIntegrations: [],
@@ -24,12 +24,17 @@ export default new Vuex.Store({
         i => i.slug === data.slug
       );
       if (_.isNil(integration.data)) {
-        integration.data = [data.value];
+        integration.data = [
+          { ...data.value, value: parseFloat(data.value.value) }
+        ];
       } else {
-        integration.data.push(data.value);
+        integration.data.push({
+          ...data.value,
+          value: parseFloat(data.value.value)
+        });
       }
 
-      if (data.value <= 4) {
+      if (parseFloat(data.value.value) <= 4) {
         state.showLowLevelWarning = true;
       }
 
@@ -79,68 +84,68 @@ export default new Vuex.Store({
           },
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`
+              Authorization: `bearer ${localStorage.getItem('token')}`
             }
           }
         );
 
-        commit("pushReading", { slug: data.slug, value: data.value });
+        commit('pushReading', { slug: data.slug, value: data.value });
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       }
     },
     async makeAppointment({ commit }, appointment) {
       try {
         await axios.post(
-          "http://localhost:3001/api/appointments",
+          'http://localhost:3001/api/appointments',
           appointment,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`
+              Authorization: `bearer ${localStorage.getItem('token')}`
             }
           }
         );
         router.go(-1);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       }
     },
     applySettings({ commit, state }, settings) {
-      localStorage.setItem("settings", JSON.stringify(settings));
-      commit("applySettings", settings);
+      localStorage.setItem('settings', JSON.stringify(settings));
+      commit('applySettings', settings);
 
       if (!state.initialBoot) {
         router.go(-1);
       }
-      commit("setInitialBoot", false);
+      commit('setInitialBoot', false);
     },
     async login({ commit }, loginDetails) {
       try {
         const response = await axios.post(
-          "http://localhost:3001/login",
+          'http://localhost:3001/login',
           loginDetails
         );
-        commit("login", response.data.user);
-        localStorage.setItem("token", response.data.accessToken);
+        commit('login', response.data.user);
+        localStorage.setItem('token', response.data.accessToken);
         router.push(`/patients/${response.data.user.id}`);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       }
     },
     async getUser({ commit }, userId) {
       try {
-        commit("setLoading", true);
+        commit('setLoading', true);
         const response = await axios.get(
           `http://localhost:3001/api/users/${userId}`,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`
+              Authorization: `bearer ${localStorage.getItem('token')}`
             }
           }
         );
@@ -149,26 +154,26 @@ export default new Vuex.Store({
           ...response.data.user,
           updated_at: moment(response.data.user.updated_at).fromNow()
         };
-        commit("setCurrentlyViewedUser", {
+        commit('setCurrentlyViewedUser', {
           address: response.data.address,
           ...user
         });
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       } finally {
-        commit("setLoading", false);
+        commit('setLoading', false);
       }
     },
     async getIntegrations({ commit }, userId) {
       try {
-        commit("setLoading", true);
+        commit('setLoading', true);
         const response = await axios.get(
           `http://localhost:3001/api/users/${userId}/integrations`,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`
+              Authorization: `bearer ${localStorage.getItem('token')}`
             }
           }
         );
@@ -176,62 +181,62 @@ export default new Vuex.Store({
         const integrations = response.data.integrations.map(integration => {
           return {
             ...integration,
-            slug: integration.name.replace(/ /gi, "-").toLowerCase()
+            slug: integration.name.replace(/ /gi, '-').toLowerCase()
           };
         });
-        commit("setUserIntegrations", integrations);
+        commit('setUserIntegrations', integrations);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       } finally {
-        commit("setLoading", false);
+        commit('setLoading', false);
       }
     },
     async getDocPatients({ commit }, userId) {
       try {
-        commit("setLoading", true);
+        commit('setLoading', true);
         const response = await axios.get(
           `http://localhost:3001/api/patients/${userId}`,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`
+              Authorization: `bearer ${localStorage.getItem('token')}`
             }
           }
         );
         const patients = response.data.Patients;
-        commit("setDocPatients", patients);
+        commit('setDocPatients', patients);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       } finally {
-        commit("setLoading", false);
+        commit('setLoading', false);
       }
     },
     async getDataForIntegration({ commit }, userIntegrationId) {
-      commit("setLoading", true);
+      commit('setLoading', true);
       try {
         const response = await axios.get(
           `http://localhost:3001/api/userintegrations/${userIntegrationId}`
         );
         commit(
-          "setCurrentlyViewedIntegrationData",
+          'setCurrentlyViewedIntegrationData',
           response.data.integrationData.map(d => {
             return {
               ...d,
               created_at: moment(d.created_at).format(
-                "dddd, MMMM Do YYYY, h:mm a"
+                'dddd, MMMM Do YYYY, h:mm a'
               )
             };
           })
         );
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       } finally {
-        commit("setLoading", false);
+        commit('setLoading', false);
       }
     },
     async updateReading({ commit }, { id, value }) {
@@ -242,14 +247,14 @@ export default new Vuex.Store({
             value
           },
           {
-            Authorization: `bearer ${localStorage.getItem("token")}`
+            Authorization: `bearer ${localStorage.getItem('token')}`
           }
         );
 
         router.go(-1);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit("showError", err.response.data.message);
+          commit('showError', err.response.data.message);
         }
       }
     }
