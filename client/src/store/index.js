@@ -1,15 +1,15 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import axios from 'axios';
-import router from '../router';
-import moment from 'moment';
-import _ from 'lodash';
+import Vue from "vue";
+import Vuex from "vuex";
+import axios from "axios";
+import router from "../router";
+import moment from "moment";
+import _ from "lodash";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     loggedInUser: {},
-    error: '',
+    error: "",
     settings: {},
     loading: false,
     userIntegrations: [],
@@ -47,6 +47,9 @@ export default new Vuex.Store({
     setUserIntegrations(state, integrations) {
       state.userIntegrations = [...integrations];
     },
+    setDocPatients(state, patients) {
+      state.patients = [...patients];
+    },
     setCurrentlyViewedUser(state, user) {
       state.userToView = { ...user };
     },
@@ -64,63 +67,63 @@ export default new Vuex.Store({
           },
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem('token')}`
+              Authorization: `bearer ${localStorage.getItem("token")}`
             }
           }
         );
 
-        commit('pushReading', { slug: data.slug, value: data.value });
+        commit("pushReading", { slug: data.slug, value: data.value });
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       }
     },
     async makeAppointment({ commit }, appointment) {
       try {
         await axios.post(
-          'http://localhost:3001/api/appointments',
+          "http://localhost:3001/api/appointments",
           appointment,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem('token')}`
+              Authorization: `bearer ${localStorage.getItem("token")}`
             }
           }
         );
         router.go(-1);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       }
     },
     applySettings({ commit }, settings) {
-      localStorage.setItem('settings', JSON.stringify(settings));
-      commit('applySettings', settings);
+      localStorage.setItem("settings", JSON.stringify(settings));
+      commit("applySettings", settings);
     },
     async login({ commit }, loginDetails) {
       try {
         const response = await axios.post(
-          'http://localhost:3001/login',
+          "http://localhost:3001/login",
           loginDetails
         );
-        commit('login', response.data.user);
-        localStorage.setItem('token', response.data.accessToken);
+        commit("login", response.data.user);
+        localStorage.setItem("token", response.data.accessToken);
         router.push(`/patients/${response.data.user.id}`);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       }
     },
     async getUser({ commit }, userId) {
       try {
-        commit('setLoading', true);
+        commit("setLoading", true);
         const response = await axios.get(
           `http://localhost:3001/api/users/${userId}`,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem('token')}`
+              Authorization: `bearer ${localStorage.getItem("token")}`
             }
           }
         );
@@ -135,20 +138,20 @@ export default new Vuex.Store({
         });
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       } finally {
-        commit('setLoading', false);
+        commit("setLoading", false);
       }
     },
     async getIntegrations({ commit }, userId) {
       try {
-        commit('setLoading', true);
+        commit("setLoading", true);
         const response = await axios.get(
           `http://localhost:3001/api/users/${userId}/integrations`,
           {
             headers: {
-              Authorization: `bearer ${localStorage.getItem('token')}`
+              Authorization: `bearer ${localStorage.getItem("token")}`
             }
           }
         );
@@ -156,16 +159,37 @@ export default new Vuex.Store({
         const integrations = response.data.integrations.map(integration => {
           return {
             ...integration,
-            slug: integration.name.replace(/ /gi, '-').toLowerCase()
+            slug: integration.name.replace(/ /gi, "-").toLowerCase()
           };
         });
-        commit('setUserIntegrations', integrations);
+        commit("setUserIntegrations", integrations);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       } finally {
-        commit('setLoading', false);
+        commit("setLoading", false);
+      }
+    },
+    async getDocPatients({ commit }, userId) {
+      try {
+        commit("setLoading", true);
+        const response = await axios.get(
+          `http://localhost:3001/api/patients/${userId}`,
+          {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem("token")}`
+            }
+          }
+        );
+        const patients = response.data.Patients;
+        commit("setDocPatients", patients);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit("showError", err.response.data.message);
+        }
+      } finally {
+        commit("setLoading", false);
       }
     },
     async getDataForIntegration({ commit }, userIntegrationId) {
