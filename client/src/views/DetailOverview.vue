@@ -24,6 +24,7 @@
 
 .btn-group {
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .bottomText {
@@ -141,13 +142,13 @@
   </div>
 </template>
 <script>
-import LineChart from './userChart';
+import LineChart from "./userChart";
 
 export default {
   data() {
     return {
       interval: null,
-      showElement: 'patient-detail'
+      showElement: "patient-detail"
     };
   },
   components: {
@@ -160,13 +161,13 @@ export default {
   },
   mounted() {
     this.$store
-      .dispatch('getUser', this.$route.params.id)
+      .dispatch("getUser", this.$route.params.id)
       .then(() => {
-        return this.$store.dispatch('getIntegrations', this.$route.params.id);
+        return this.$store.dispatch("getIntegrations", this.$route.params.id);
       })
       .then(() => {
         const glucoseMetre = this.$store.state.userIntegrations.find(
-          integration => integration.slug === 'glucose-metre'
+          integration => integration.slug === "glucose-metre"
         );
 
         /**
@@ -179,7 +180,7 @@ export default {
           } while (value < 2 || value > 10);
 
           // Fire a vuex action to record this in the database.
-          this.$store.dispatch('createReading', {
+          this.$store.dispatch("createReading", {
             slug: glucoseMetre.slug,
             userIntegrationId: glucoseMetre.integrationId,
             value

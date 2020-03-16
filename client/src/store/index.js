@@ -15,6 +15,7 @@ export default new Vuex.Store({
     userIntegrations: [],
     userToView: {},
     initialBoot: true,
+    showLowLevelWarning: false,
     currentlyViewedIntegrationData: []
   },
   mutations: {
@@ -26,6 +27,10 @@ export default new Vuex.Store({
         integration.data = [data.value];
       } else {
         integration.data.push(data.value);
+      }
+
+      if (data.value <= 4) {
+        state.showLowLevelWarning = true;
       }
 
       state.userIntegrations = [
@@ -59,6 +64,9 @@ export default new Vuex.Store({
     },
     setCurrentlyViewedIntegrationData(state, data) {
       state.currentlyViewedIntegrationData = [...data];
+    },
+    setshowLowLevelWarning(state, shouldShow) {
+      state.showLowLevelWarning = shouldShow;
     }
   },
   actions: {
@@ -102,13 +110,13 @@ export default new Vuex.Store({
       }
     },
     applySettings({ commit, state }, settings) {
-      localStorage.setItem('settings', JSON.stringify(settings));
-      commit('applySettings', settings);
+      localStorage.setItem("settings", JSON.stringify(settings));
+      commit("applySettings", settings);
 
       if (!state.initialBoot) {
         router.go(-1);
       }
-      commit('setInitialBoot', false);
+      commit("setInitialBoot", false);
     },
     async login({ commit }, loginDetails) {
       try {
@@ -141,7 +149,7 @@ export default new Vuex.Store({
           ...response.data.user,
           updated_at: moment(response.data.user.updated_at).fromNow()
         };
-        commit('setCurrentlyViewedUser', {
+        commit("setCurrentlyViewedUser", {
           address: response.data.address,
           ...user
         });
@@ -202,28 +210,28 @@ export default new Vuex.Store({
       }
     },
     async getDataForIntegration({ commit }, userIntegrationId) {
-      commit('setLoading', true);
+      commit("setLoading", true);
       try {
         const response = await axios.get(
           `http://localhost:3001/api/userintegrations/${userIntegrationId}`
         );
         commit(
-          'setCurrentlyViewedIntegrationData',
+          "setCurrentlyViewedIntegrationData",
           response.data.integrationData.map(d => {
             return {
               ...d,
               created_at: moment(d.created_at).format(
-                'dddd, MMMM Do YYYY, h:mm a'
+                "dddd, MMMM Do YYYY, h:mm a"
               )
             };
           })
         );
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       } finally {
-        commit('setLoading', false);
+        commit("setLoading", false);
       }
     },
     async updateReading({ commit }, { id, value }) {
@@ -234,14 +242,14 @@ export default new Vuex.Store({
             value
           },
           {
-            Authorization: `bearer ${localStorage.getItem('token')}`
+            Authorization: `bearer ${localStorage.getItem("token")}`
           }
         );
 
         router.go(-1);
       } catch (err) {
         if (!_.isNil(err.response.data)) {
-          commit('showError', err.response.data.message);
+          commit("showError", err.response.data.message);
         }
       }
     }
