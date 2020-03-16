@@ -26,15 +26,6 @@
   width: 100%;
 }
 
-.cogIcon {
-  float: right;
-  margin-top: -20px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  font-size: 30px;
-  cursor: pointer;
-}
-
 .bottomText {
   float: right;
 }
@@ -44,15 +35,6 @@
   <!-- Top bit below navbar -->
   <div class="container">
     <div v-if="!$store.state.loading">
-      <div class="row">
-        <div class="col">
-          <font-awesome-icon
-            icon="cog"
-            class="cogIcon"
-            onclick="location.href='#'"
-          />
-        </div>
-      </div>
       <div class="row">
         <div class="col">
           <h3>{{ $store.state.userToView.name }}</h3>
@@ -194,7 +176,7 @@ export default {
           let value = ((Math.random() % 10) * 10).toPrecision(3);
           do {
             value = ((Math.random() % 10) * 10).toPrecision(3);
-          } while (value < 2 || value > 20);
+          } while (value < 2 || value > 10);
 
           // Fire a vuex action to record this in the database.
           this.$store.dispatch('createReading', {
@@ -202,7 +184,7 @@ export default {
             userIntegrationId: glucoseMetre.integrationId,
             value
           });
-        }, 10 * 1000);
+        }, 60 * 1000 * 2);
       });
   },
   beforeDestory() {

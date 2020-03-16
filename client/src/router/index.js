@@ -15,45 +15,41 @@ const routes = [
     name: "home",
     component: Home,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      canViewWithAuth: true
     }
   },
   {
     path: "/login",
     component: Login,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      canViewWithAuth: false
     }
   },
   {
     path: "/makeappointment",
     component: MakeAppointment,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      canViewWithAuth: true
     }
   },
   {
     path: "/settings",
     component: Settings,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      canViewWithAuth: true
     }
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  },
-  {
-    path: "/patients/:id",
-    name: "patientDetails",
+    path: '/patients/:id',
+    name: 'patientDetails',
     component: DetailOverview,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      canViewWithAuth: true
     }
   },
   {
@@ -81,11 +77,12 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const routeRequiresAuth = to.matched.some(x => x.meta.requiresAuth);
-  const token = localStorage.getItem("token");
+  const canViewRouteWithAuth = to.matched.some(x => x.meta.canViewWithAuth);
+  const token = localStorage.getItem('token');
   if (routeRequiresAuth && _.isNil(token)) {
-    next("/login");
-  } else if (!routeRequiresAuth && !_.isNil(token)) {
-    next("/");
+    next('/login');
+  } else if (!canViewRouteWithAuth && !_.isNil(token)) {
+    next('/');
   } else {
     next();
   }

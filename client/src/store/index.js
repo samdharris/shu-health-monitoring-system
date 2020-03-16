@@ -14,6 +14,7 @@ export default new Vuex.Store({
     loading: false,
     userIntegrations: [],
     userToView: {},
+    initialBoot: true,
     currentlyViewedIntegrationData: []
   },
   mutations: {
@@ -52,6 +53,9 @@ export default new Vuex.Store({
     },
     setCurrentlyViewedUser(state, user) {
       state.userToView = { ...user };
+    },
+    setInitialBoot(state, initialBoot) {
+      state.initialBoot = initialBoot;
     },
     setCurrentlyViewedIntegrationData(state, data) {
       state.currentlyViewedIntegrationData = [...data];
@@ -97,9 +101,14 @@ export default new Vuex.Store({
         }
       }
     },
-    applySettings({ commit }, settings) {
-      localStorage.setItem("settings", JSON.stringify(settings));
-      commit("applySettings", settings);
+    applySettings({ commit, state }, settings) {
+      localStorage.setItem('settings', JSON.stringify(settings));
+      commit('applySettings', settings);
+
+      if (!state.initialBoot) {
+        router.go(-1);
+      }
+      commit('setInitialBoot', false);
     },
     async login({ commit }, loginDetails) {
       try {
