@@ -12,6 +12,9 @@ import EditData from '../views/EditData.vue';
 import _ from 'lodash';
 Vue.use(VueRouter);
 
+/**
+ * Application routes
+ */
 const routes = [
   {
     path: '/',
@@ -98,6 +101,11 @@ const router = new VueRouter({
   routes
 });
 
+/**
+ * On each route, checks to see if you need to be logged in to view the given route and handles any required redirects
+ * accordingly.
+ * @see https://router.vuejs.org/guide/advanced/navigation-guards.html
+ */
 router.beforeEach((to, from, next) => {
   const routeRequiresAuth = to.matched.some(x => x.meta.requiresAuth);
   const canViewRouteWithAuth = to.matched.some(x => x.meta.canViewWithAuth);
