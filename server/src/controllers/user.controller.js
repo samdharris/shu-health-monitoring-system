@@ -1,8 +1,14 @@
 const database = require('../database');
-const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const httpCodes = require('http-status-codes');
 
+/**
+ * GET - /api/users
+ * Gets all users of the system
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.index = async (req, res) => {
   const users = await database.knex('users').select('*');
   res.json({
@@ -11,6 +17,13 @@ exports.index = async (req, res) => {
   });
 };
 
+/**
+ * GET - /api/users/:id
+ * Gets a given user
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.getUser = async (req, res) => {
   try {
     const user = await database

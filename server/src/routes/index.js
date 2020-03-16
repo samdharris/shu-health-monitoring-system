@@ -15,7 +15,6 @@ router.use('/api/users', userRoutes);
 router.use('/api/patients', patientRoutes);
 router.use('/api/appointments', appointmentRoutes);
 router.use('/api/integrations', integrationRoutes);
-router.use('/api/integrations', integrationRoutes);
 router.use('/api/userintegrations', userIntegrationRoutes);
 
 router.use(authRoutes);

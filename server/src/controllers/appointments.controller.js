@@ -1,6 +1,14 @@
 const appointmentsService = require('../services/appointmentService');
 const jwt = require('jsonwebtoken');
 const httpCodes = require('http-status-codes');
+/**
+ * POST - /api/appointments
+ *
+ * Makes an appointment for the current user
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.createAppointment = async (req, res) => {
   try {
     const split = req.header('Authorization').split(' ');
