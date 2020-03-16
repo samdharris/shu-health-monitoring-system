@@ -55,3 +55,90 @@ describe('POST - /api/integrations/1/data', () => {
     expect(response.body.value).toBe(updatedValue);
   });
 });
+
+describe('GET - /api/1/integrations', () => {
+  let data = {};
+  beforeAll(() => {
+    // Login the user
+    return userSeeder
+      .seedPatient()
+      .then(() => {
+        return database.knex('users').first();
+      })
+      .then(user => {
+        const body = {
+          email: user.email_address,
+          password: process.env.DUMMY_PASSWORD
+        };
+        return supertest.post('/login').send(body);
+      })
+      .then(({ body }) => {
+        data.token = body.accessToken;
+        data.user = body.user;
+      });
+  });
+
+  beforeEach(() => {
+    return database.knex('user_integrations').truncate();
+  });
+
+  it('should return all integrations for a given user', async () => {
+    INTEGRATIONS.forEach(
+      async integration => await integrationsSeeder.seedIntegration(integration)
+    );
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedUserIntegration(2, data.user.id);
+
+    const response = await supertest
+      .get(`/api/users/1/integrations`)
+      .set(`Authorization`, `bearer ${data.token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.integrations).toHaveLength(2);
+  });
+});
+
+describe('POST - /api/integrations/1/data', () => {
+  let data = {};
+  beforeAll(() => {
+    // Login the user
+    return userSeeder
+      .seedPatient()
+      .then(() => {
+        return database.knex('users').first();
+      })
+      .then(user => {
+        const body = {
+          email: user.email_address,
+          password: process.env.DUMMY_PASSWORD
+        };
+        return supertest.post('/login').send(body);
+      })
+      .then(({ body }) => {
+        data.token = body.accessToken;
+        data.user = body.user;
+      });
+  });
+
+  beforeEach(() => {
+    return database.knex('user_integrations').truncate();
+  });
+
+  it('should create a reading in the database', async () => {
+    // Seed the test db
+    await integrationsSeeder.seedIntegration(INTEGRATIONS[0]);
+    const userIntegration = await integrationsSeeder.seedUserIntegration(
+      1,
+      data.user.id
+    );
+
+    const reading = 6.0;
+    const response = await supertest
+      .post(`/api/integrations/${userIntegration.id}/data`)
+      .send({ value: reading });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('value');
+    expect(response.body.value).toBe(reading);
+  });
+});

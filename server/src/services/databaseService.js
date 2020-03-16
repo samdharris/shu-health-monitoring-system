@@ -1,5 +1,9 @@
 const database = require('../database');
 const assert = require('assert');
+exports.addData = async (table, values) => {
+  await database.knex(table).insert(values);
+  return await database.knex(table).orderBy('id', 'desc');
+};
 
 exports.getIntegrationForUser = async (userId, integrationId) => {
   return await database
@@ -8,6 +12,15 @@ exports.getIntegrationForUser = async (userId, integrationId) => {
     .where('integration_id', integrationId)
     .first();
 };
+
+exports.addData = async (table, values) => {
+  await database.knex(table).insert(values);
+  return await database
+    .knex(table)
+    .orderBy('id', 'desc')
+    .first();
+};
+exports.getData = async (table, query) => await query(database.knex(table));
 
 exports.updateData = async (
   tableName,
