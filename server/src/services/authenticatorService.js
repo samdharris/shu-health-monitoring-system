@@ -3,6 +3,12 @@ const database = require('../database');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
+/**
+ * Authenciates the user. Generating a jwt token
+ *
+ * @param {Object} validatedData
+ * @returns {Promise<Object>} access token and the authenticated user record
+ */
 exports.authenticate = async validatedData => {
   try {
     const user = await database
@@ -31,6 +37,12 @@ exports.authenticate = async validatedData => {
   }
 };
 
+/**
+ * Authenciates the user with the given token
+ *
+ * @param {String} header
+ * @returns {Promise<Object>} the authenticated user record
+ */
 exports.authenticateWithToken = async header => {
   try {
     if (_.isNil(header)) {
