@@ -56,7 +56,7 @@ describe('POST - /api/integrations/1/data', () => {
   });
 });
 
-describe('GET - /api/integrations', () => {
+describe('GET - /api/1/integrations', () => {
   let data = {};
   beforeAll(() => {
     // Login the user
@@ -90,7 +90,7 @@ describe('GET - /api/integrations', () => {
     await integrationsSeeder.seedUserIntegration(2, data.user.id);
 
     const response = await supertest
-      .get('/api/integrations')
+      .get(`/api/users/1/integrations`)
       .set(`Authorization`, `bearer ${data.token}`);
 
     expect(response.status).toBe(200);

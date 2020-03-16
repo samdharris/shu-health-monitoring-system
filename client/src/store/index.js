@@ -125,7 +125,10 @@ export default new Vuex.Store({
           ...response.data.user,
           updated_at: moment(response.data.user.updated_at).fromNow()
         };
-        commit('setCurrentlyViewedUser', user);
+        commit('setCurrentlyViewedUser', {
+          address: response.data.address,
+          ...user
+        });
       } catch (err) {
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
@@ -134,11 +137,11 @@ export default new Vuex.Store({
         commit('setLoading', false);
       }
     },
-    async getIntegrations({ commit }) {
+    async getIntegrations({ commit }, userId) {
       try {
         commit('setLoading', true);
         const response = await axios.get(
-          'http://localhost:3001/api/integrations',
+          `http://localhost:3001/api/users/${userId}/integrations`,
           {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`

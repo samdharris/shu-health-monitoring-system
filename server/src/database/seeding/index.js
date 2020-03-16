@@ -1,8 +1,10 @@
 const userSeeder = require('./userSeeder');
 const integrationsSeeder = require('./integrationsSeeder');
+const addressSeeder = require('./addressSeeder');
 const database = require('../index');
 const { ACCOUNT_TYPES } = require('../../constants');
 exports.run = async (n = 1) => {
+  await addressSeeder.seedAddress();
   await userSeeder.seedDoctor(n);
   await userSeeder.seedPatient(n);
   const user = await database

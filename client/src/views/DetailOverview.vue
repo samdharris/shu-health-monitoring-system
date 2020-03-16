@@ -115,6 +115,18 @@
           </a>
         </p>
 
+        <div v-if="$store.state.userToView.address">
+          <strong>Address</strong>
+          <address>
+            {{ $store.state.userToView.address.address_line_1 }}
+            {{ $store.state.userToView.address.address_line_2 }}
+            {{ $store.state.userToView.address.address_line_3 }}
+            {{ $store.state.userToView.address.city }}
+            {{ $store.state.userToView.address.county }}
+            {{ $store.state.userToView.address.post_code }}
+          </address>
+        </div>
+
         <footer>
           <p class="bottomText">
             Updated: {{ $store.state.userToView.updated_at }}
@@ -155,7 +167,7 @@ export default {
     this.$store
       .dispatch('getUser', this.$route.params.id)
       .then(() => {
-        return this.$store.dispatch('getIntegrations');
+        return this.$store.dispatch('getIntegrations', this.$route.params.id);
       })
       .then(() => {
         const glucoseMetre = this.$store.state.userIntegrations.find(
