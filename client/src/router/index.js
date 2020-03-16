@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Settings from "../views/Settings.vue";
 import DetailOverview from "../views/DetailOverview.vue";
 import Connect from "../views/Connect.vue";
+import Features from "../views/Features.vue";
 import _ from "lodash";
 Vue.use(VueRouter);
 
@@ -52,6 +53,14 @@ const routes = [
     path: "/connect",
     name: "connect",
     component: Connect,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/features",
+    name: "features",
+    component: Features,
     meta: {
       requiresAuth: true
     }
