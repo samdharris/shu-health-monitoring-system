@@ -13,7 +13,8 @@ export default new Vuex.Store({
     settings: {},
     loading: false,
     userIntegrations: [],
-    userToView: {}
+    userToView: {},
+    currentlyViewedIntegrationData: []
   },
   mutations: {
     pushReading(state, data) {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     },
     setCurrentlyViewedUser(state, user) {
       state.userToView = { ...user };
+    },
+    setCurrentlyViewedIntegrationData(state, data) {
+      state.currentlyViewedIntegrationData = [...data];
     }
   },
   actions: {
@@ -186,6 +190,50 @@ export default new Vuex.Store({
         }
       } finally {
         commit("setLoading", false);
+      }
+    },
+    async getDataForIntegration({ commit }, userIntegrationId) {
+      commit('setLoading', true);
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/userintegrations/${userIntegrationId}`
+        );
+        commit(
+          'setCurrentlyViewedIntegrationData',
+          response.data.integrationData.map(d => {
+            return {
+              ...d,
+              created_at: moment(d.created_at).format(
+                'dddd, MMMM Do YYYY, h:mm a'
+              )
+            };
+          })
+        );
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit('showError', err.response.data.message);
+        }
+      } finally {
+        commit('setLoading', false);
+      }
+    },
+    async updateReading({ commit }, { id, value }) {
+      try {
+        await axios.put(
+          `http://localhost:3001/api/integrations/${id}/data`,
+          {
+            value
+          },
+          {
+            Authorization: `bearer ${localStorage.getItem('token')}`
+          }
+        );
+
+        router.go(-1);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit('showError', err.response.data.message);
+        }
       }
     }
   },

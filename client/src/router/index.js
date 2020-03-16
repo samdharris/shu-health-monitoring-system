@@ -57,6 +57,13 @@ const routes = [
     }
   },
   {
+    path: '/integrations/:integrationId/edit',
+    component: EditData,
+        meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: "/doctor/:id",
     name: "patientList",
     component: PatientList,
