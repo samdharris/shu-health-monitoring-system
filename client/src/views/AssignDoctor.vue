@@ -3,6 +3,9 @@
   <div class="container">
     <div v-if="!$store.state.loading">
       <div>
+        <div>
+          <router-link :to="`/controlPage`">Return </router-link>
+        </div>
         <h2>Assign Patient's doctor</h2>
         <form @submit.prevent="onSubmitAssignDoctor">
           <p>
@@ -53,6 +56,22 @@ export default {
     this.$store.dispatch("getDoctors").then(() => {
       this.$store.dispatch("getAllPatients");
     });
+  },
+  methods: {
+    onSubmit() {
+      if (this.patient_id === null || this.doctor_id === null) {
+        return;
+      }
+      this.$store
+        .dispatch("assignDoctor", {
+          patient_id: this.patient_id,
+          doctor_id: this.doctor_id
+        })
+        .then(() => {
+          this.patient_id = "";
+          this.doctor_id = "";
+        });
+    }
   }
 };
 </script>

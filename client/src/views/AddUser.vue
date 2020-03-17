@@ -3,6 +3,9 @@
   <div class="container">
     <div v-if="!$store.state.loading">
       <div>
+        <div>
+          <router-link :to="`/controlPage`">Return </router-link>
+        </div>
         <h2>Add New User</h2>
         <form @submit.prevent="onSubmitNewUser">
           <p>
@@ -84,6 +87,36 @@ export default {
         this.$store.dispatch("getAllPatients");
       });
     });
+  },
+  methods: {
+    onSubmit() {
+      if (
+        this.name === null ||
+        this.email_address === null ||
+        this.password === null
+      ) {
+        return;
+      }
+      this.$store
+        .dispatch("addUser", {
+          name: this.name,
+          phone_number: this.phone_number,
+          email_address: this.email_address,
+          account_type: this.account_type,
+          password: this.password,
+          doctor_id: this.doctor_id,
+          address_id: this.address_id
+        })
+        .then(() => {
+          this.name = "";
+          this.phone_number = "";
+          this.email_address = "";
+          this.account_type = "";
+          this.password = "";
+          this.doctor_id = "";
+          this.address_id = "";
+        });
+    }
   }
 };
 </script>

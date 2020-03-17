@@ -10,6 +10,9 @@ import MakeAppointment from "../views/MakeAppointment.vue";
 import PatientList from "../views/PatientList.vue";
 import EditData from "../views/EditData.vue";
 import ControlPage from "../views/ControlPage.vue";
+import AddAddress from "../views/AddAddress.vue";
+import AddUser from "../views/AddUser.vue";
+import AssignDoctor from "../views/AssignDoctor.vue";
 import _ from "lodash";
 Vue.use(VueRouter);
 
@@ -95,6 +98,33 @@ const routes = [
     path: "/controlPage",
     name: "controlPage",
     component: ControlPage,
+    meta: {
+      requiresAuth: true,
+      canViewWithAuth: true
+    }
+  },
+  {
+    path: "/addAddress",
+    name: "addAddress",
+    component: AddAddress,
+    meta: {
+      requiresAuth: true,
+      canViewWithAuth: true
+    }
+  },
+  {
+    path: "/addUser",
+    name: "addUser",
+    component: AddUser,
+    meta: {
+      requiresAuth: true,
+      canViewWithAuth: true
+    }
+  },
+  {
+    path: "/assignDoctor",
+    name: "assignDoctor",
+    component: AssignDoctor,
     meta: {
       requiresAuth: true,
       canViewWithAuth: true

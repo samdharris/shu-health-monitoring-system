@@ -3,6 +3,9 @@
   <div class="container">
     <div v-if="!$store.state.loading">
       <div>
+        <div>
+          <router-link :to="`/controlPage`">Return </router-link>
+        </div>
         <h2>Add Address</h2>
         <form @submit.prevent="onSubmitNewAddress">
           Address :
@@ -59,6 +62,31 @@ export default {
       county: null,
       post_code: null
     };
+  },
+  methods: {
+    onSubmit() {
+      if (this.address_line_1 === null || this.post_code === null) {
+        return;
+      }
+
+      this.$store
+        .dispatch("addAddress", {
+          address_line_1: this.address_line_1,
+          address_line_2: this.address_line_2,
+          address_line_3: this.address_line_3,
+          city: this.city,
+          county: this.county,
+          post_code: this.post_code
+        })
+        .then(() => {
+          this.address_line_1 = "";
+          this.address_line_2 = "";
+          this.address_line_3 = "";
+          this.city = "";
+          this.county = "";
+          this.post_code = "";
+        });
+    }
   }
 };
 </script>
