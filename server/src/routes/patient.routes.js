@@ -3,6 +3,7 @@ const controller = require("../controllers/patient.controller");
 
 const router = Router();
 
+router.get("/", controller.getAllPatients);
 router.get("/:userId", controller.getPatients);
 
 module.exports = router;

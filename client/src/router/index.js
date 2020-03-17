@@ -1,21 +1,22 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import Settings from '../views/Settings.vue';
-import DetailOverview from '../views/DetailOverview.vue';
-import Connect from '../views/Connect.vue';
-import Features from '../views/Features.vue';
-import MakeAppointment from '../views/MakeAppointment.vue';
-import PatientList from '../views/PatientList.vue';
-import EditData from '../views/EditData.vue';
-import _ from 'lodash';
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
+import Settings from "../views/Settings.vue";
+import DetailOverview from "../views/DetailOverview.vue";
+import Connect from "../views/Connect.vue";
+import Features from "../views/Features.vue";
+import MakeAppointment from "../views/MakeAppointment.vue";
+import PatientList from "../views/PatientList.vue";
+import EditData from "../views/EditData.vue";
+import ControlPage from "../views/ControlPage.vue";
+import _ from "lodash";
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
+    path: "/",
+    name: "home",
     component: Home,
     meta: {
       requiresAuth: true,
@@ -23,7 +24,7 @@ const routes = [
     }
   },
   {
-    path: '/login',
+    path: "/login",
     component: Login,
     meta: {
       requiresAuth: false,
@@ -31,7 +32,7 @@ const routes = [
     }
   },
   {
-    path: '/makeappointment',
+    path: "/makeappointment",
     component: MakeAppointment,
     meta: {
       requiresAuth: true,
@@ -39,7 +40,7 @@ const routes = [
     }
   },
   {
-    path: '/settings',
+    path: "/settings",
     component: Settings,
     meta: {
       requiresAuth: false,
@@ -47,8 +48,8 @@ const routes = [
     }
   },
   {
-    path: '/patients/:id',
-    name: 'patientDetails',
+    path: "/patients/:id",
+    name: "patientDetails",
     component: DetailOverview,
     meta: {
       requiresAuth: true,
@@ -56,7 +57,7 @@ const routes = [
     }
   },
   {
-    path: '/integrations/:integrationId/edit',
+    path: "/integrations/:integrationId/edit",
     component: EditData,
     meta: {
       requiresAuth: true,
@@ -64,8 +65,8 @@ const routes = [
     }
   },
   {
-    path: '/doctor/:id',
-    name: 'patientList',
+    path: "/doctor/:id",
+    name: "patientList",
     component: PatientList,
     meta: {
       requiresAuth: true,
@@ -73,8 +74,8 @@ const routes = [
     }
   },
   {
-    path: '/connect',
-    name: 'connect',
+    path: "/connect",
+    name: "connect",
     component: Connect,
     meta: {
       requiresAuth: true,
@@ -82,9 +83,18 @@ const routes = [
     }
   },
   {
-    path: '/features',
-    name: 'features',
+    path: "/features",
+    name: "features",
     component: Features,
+    meta: {
+      requiresAuth: true,
+      canViewWithAuth: true
+    }
+  },
+  {
+    path: "/controlPage",
+    name: "controlPage",
+    component: ControlPage,
     meta: {
       requiresAuth: true,
       canViewWithAuth: true
@@ -93,7 +103,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
 });
@@ -101,11 +111,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const routeRequiresAuth = to.matched.some(x => x.meta.requiresAuth);
   const canViewRouteWithAuth = to.matched.some(x => x.meta.canViewWithAuth);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (routeRequiresAuth && _.isNil(token)) {
-    next('/login');
+    next("/login");
   } else if (!canViewRouteWithAuth && !_.isNil(token)) {
-    next('/');
+    next("/");
   } else {
     next();
   }
