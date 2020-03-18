@@ -422,6 +422,11 @@ export default new Vuex.Store({
         }
       }
     },
+    /**
+     * Performs a request to the server to get all users with ACCOUNT_TYPE: doctor
+     * state
+     * @param {Object} param0
+     */
     async getDoctors({ commit }) {
       try {
         commit("setLoading", true);
@@ -440,6 +445,11 @@ export default new Vuex.Store({
         commit("setLoading", false);
       }
     },
+    /**
+     * Performs a request to the server to get all Addresses
+     * state
+     * @param {Object} param0
+     */
     async getAddresses({ commit }) {
       try {
         commit("setLoading", true);
@@ -461,6 +471,11 @@ export default new Vuex.Store({
         commit("setLoading", false);
       }
     },
+    /**
+     * Performs a request to the server to get all users with ACCOUNT_TYPE: patients
+     * state
+     * @param {Object} param0
+     */
     async getAllPatients({ commit }) {
       try {
         commit("setLoading", true);
@@ -479,6 +494,11 @@ export default new Vuex.Store({
         commit("setLoading", false);
       }
     },
+    /**
+     * Takes the given address, sends it to the server to be recorded in the db
+     * @param {Object} param0
+     * @param {Object} address
+     */
     async addAddress({ commit }, address) {
       try {
         await axios.post("http://localhost:3001/api/addresses", address, {
@@ -493,6 +513,11 @@ export default new Vuex.Store({
         }
       }
     },
+    /**
+     * Takes the given user, sends it to the server to be added to the db
+     * @param {Object} param0
+     * @param {Object} user
+     */
     async addUser({ commit }, user) {
       try {
         await axios.post("http://localhost:3001/api/users", user, {
@@ -507,7 +532,13 @@ export default new Vuex.Store({
         }
       }
     },
+    /**
+     * Takes a pair of id's for the patient and the doctor_id they need and sends to the server to update the db
+     * @param {Object} param0
+     * @param {Object} values
+     */
     async assignDoctor({ commit }, values) {
+      //values are {user_id,doctor_id}
       try {
         await axios.post(
           `http://localhost:3001/api/users/${values.user_id}`,

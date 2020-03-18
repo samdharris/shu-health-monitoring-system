@@ -1,6 +1,13 @@
 const database = require("../database");
 const httpCodes = require("http-status-codes");
-
+/**
+ * GET /api/patients
+ *
+ * Gets all the patients
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.getAllPatients = async (req, res) => {
   try {
     const Patients = await database.knex("users");

@@ -2,7 +2,6 @@ const database = require("../database");
 const assert = require("assert");
 const bcrypt = require("bcryptjs");
 
-
 /**
  * Adds the given values to the given table in the database returning the newly added data.
  *
@@ -89,6 +88,14 @@ exports.updateData = async (
     .where(referenceColumn, refColumnValue)
     .first();
 };
+/**
+ * Adds an address
+ *
+ * @param {String} table
+ * @param {String} address
+ *
+ * @returns {Promise<any>}
+ */
 exports.addAddress = async (table, address) => {
   await database.knex(table).insert(address);
   return await database
@@ -96,6 +103,14 @@ exports.addAddress = async (table, address) => {
     .orderBy("id", "desc")
     .first();
 };
+/**
+ * Adds a user
+ *
+ * @param {String} table
+ * @param {String} user
+ *
+ * @returns {Promise<any>}
+ */
 exports.addUser = async (table, user) => {
   const numRounds = parseInt(process.env.SALT_ROUNDS);
   const password = await bcrypt.hash(
@@ -112,6 +127,14 @@ exports.addUser = async (table, user) => {
     .orderBy("id", "desc")
     .first();
 };
+/**
+ * Updates a user's doctor_id
+ *
+ * @param {String} table
+ * @param {String} values
+ *
+ * @returns {Promise<any>}
+ */
 exports.assignDoctor = async (table, values) => {
   console.log(values.user_id, values.doctor_id);
   return await database

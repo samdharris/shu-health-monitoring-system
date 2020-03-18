@@ -48,6 +48,13 @@ exports.getUser = async (req, res) => {
     res.status(httpCodes.NOT_FOUND).json({ message: "User doesn't exist!" });
   }
 };
+/**
+ * POST - /api/users
+ * Adds a given user to the system
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.addUser = async (req, res) => {
   try {
     const response = await userService.addUser({
@@ -59,6 +66,13 @@ exports.addUser = async (req, res) => {
     res.status(httpCodes.BAD_REQUEST).send();
   }
 };
+/**
+ * POST - /api/users/:id
+ * Takes the given doctor_id value and updates patient with it.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.assignDoctor = async (req, res) => {
   try {
     const response = await userService.assignDoctor({
