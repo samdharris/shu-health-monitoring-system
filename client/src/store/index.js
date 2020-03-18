@@ -471,7 +471,9 @@ export default new Vuex.Store({
           `http://localhost:3001/api/integrations/${id}/data`, {
             value
           }, {
-            Authorization: `bearer ${localStorage.getItem('token')}`
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`
+            }
           }
         );
 
