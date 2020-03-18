@@ -4,7 +4,7 @@ describe('This is a demo to prove Sam can walk the walk.', () => {
     const expected = 10;
 
     // Act
-    const actual = 5 + 6;
+    const actual = 5 + 5;
 
     // Expect
     expect(actual).toBe(expected);
