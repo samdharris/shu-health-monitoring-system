@@ -27,7 +27,7 @@ const routes = [
     component: Login,
     meta: {
       requiresAuth: false,
-      canViewWithAuth: false
+      canViewWithAuth: true
     }
   },
   {

@@ -11,5 +11,5 @@ Steps to set up docker instances:
 5. In the db window, run the following commands:
 	- mysql -u dbuser -p;  (password is dbpass)
 	- use sitedb
-	- select * from users
-	- log in with given username and "password" (literal) at localhost:8080
+	- select * from users;
+	- log in with given username and "password" (literal) at localhost:8080/login
