@@ -1,6 +1,15 @@
 const loginValidation = require('../validation/login');
 const authenticatorService = require('../services/authenticatorService');
 const httpCodes = require('http-status-codes');
+
+/**
+ * POST - /login
+ *
+ * Peforms a login for a given set of credentials
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.login = async (req, res) => {
   try {
     // validate
@@ -16,6 +25,14 @@ exports.login = async (req, res) => {
   }
 };
 
+/**
+ * POST - /verify
+ *
+ * Verifies the given token in the Authorization header
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.verify = async (req, res) => {
   try {
     const response = await authenticatorService.authenticateWithToken(

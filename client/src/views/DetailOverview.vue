@@ -152,8 +152,17 @@ import _ from 'lodash';
 export default {
   data() {
     return {
+      /**
+       * Options for the line charts
+       */
       chartOptions: {},
+      /**
+       * The Interval object for the periodic reading creation
+       */
       interval: null,
+      /**
+       * Contains which tab contents is currently being shown
+       */
       showElement: 'patient-detail'
     };
   },
@@ -161,9 +170,19 @@ export default {
     LineChart
   },
   methods: {
+    /**
+     * Sets which tab contents to show
+     *
+     * @param {String} elementToShow
+     */
     toggle(elementToShow) {
       this.showElement = elementToShow;
     },
+    /**
+     * Generates the chart data object
+     *
+     * @param {Array<Object>} integrationData
+     */
     generateChartData(integrationData) {
       return {
         labels: _.map(integrationData, d =>
@@ -190,7 +209,7 @@ export default {
         );
 
         /**
-         * Every 10 seconds, generate a unique 2 piece value between 2 and 20
+         * Every 2 minutes, generate a unique 2 piece value between 2 and 10
          */
         this.interval = setInterval(() => {
           let value = ((Math.random() % 10) * 10).toPrecision(3);

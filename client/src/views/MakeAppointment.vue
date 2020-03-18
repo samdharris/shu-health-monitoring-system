@@ -48,6 +48,9 @@ import moment from 'moment';
 
 export default {
   data() {
+    /**
+     * Holds the requested date for the appointment as well as the reason for the appointment
+     */
     return {
       reason: '',
       date: new Date()
@@ -57,6 +60,9 @@ export default {
     DatePicker
   },
   methods: {
+    /**
+     * Handles form submission
+     */
     onSubmit() {
       this.$store
         .dispatch('makeAppointment', {

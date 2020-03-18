@@ -1,24 +1,55 @@
+# We use GitHub Actions for our continuous integration. We use GitHub's hosted runners for this. This workflow is aimed
+# at the server part of the application.
 name: Run Server test suite
+
+# This specifies when this workflow should be run. We only want it to run when a pull request is opened
 on: [pull_request]
 
+# A job is a set of tasks that are to be run then this workflow runs
 jobs:
+  # Here we specify the name of the job
   test:
+    # We specify which operating system this test should be run on. We choose Linux since if this was to be deployed, it
+    # would be hosted on server running Linx. For a list of supported see: https://help.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: ubuntu-latest
+    # This is the list of tasks that need to be completed in order for this specific job to pass. If any of these fail,
+    # the entire workflow fails.
     steps:
+      # A step can have many different actions associated with it. This first step tells the actions runner that we're
+      # wanting this job to run in a Node.js environment.
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
+          # Here we specify which version of Node.js to use. If we required, we could specify a Matrix of different Node.js versions
+          # and the remainder of this job would run on each individual version. For more, see: https://help.github.com/en/actions/language-and-framework-guides/using-nodejs-with-github-actions#starting-with-the-nodejs-workflow-template
           node-version: '12.x'
+        # Next, we install all dependencies that the server needs locking the version of each package in the process to
+        # avoid any unnecessary breaks because of something changing in a newer version of a package or one of the
+        # package's dependencies.
       - name: Install Dependencies
         run: yarn --frozen-lockfile
+        # Since the repository contains both the client and the server, we specify that this step should be run from
+        # within the server directory
         working-directory: ./server
+        # This step is the main step within this workflow. This step runs the test suite for the server.
       - name: Run tests
         working-directory: ./server
         run: yarn test
+        # Here we specify environment variables that are required in order for this test suite to run.
         env:
+          # This one tells the application that we're running in test mode so any parts of the system that need to be
+          # changed based on the environment we're running in can be changed. Besides Jest (our testing framework), the
+          # only place that's checks this flag is when we open a connection to the database since we switch from using
+          # mysql to an in-memory sqlite database for the CI tests.
           NODE_ENV: test
           CI: true
+          # These variables are specific to the server application. Since we make use of .env files to store any
+          # configurations which cannot be accessed by the test suite in a CI environment. Where ${secrets.KEY} are
+          # present, this means that the value has been put into an encrypted, one-way vault in the repository to prevent
+          # hardcoding of any sensitive information.
           DUMMY_PASSWORD: ${{ secrets.DUMMY_PASSWORD }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          # We make use of bcrypt for hashing passwords. This specify how many rounds of salting we do before coming up
+          # with the final salt that is used for the password.
           SALT_ROUNDS: 10

@@ -3,10 +3,13 @@ const supertest = require('supertest')(app);
 const userSeeder = require('../src/database/seeding/userSeeder');
 const addressSeeder = require('../src/database/seeding/addressSeeder');
 const database = require('../src/database');
-const { INTEGRATIONS } = require('../src/constants');
 
 const path = require('path');
 
+/**
+ * Runs before any test block is executed. Used to connect to the database and run migrations.
+ * @see https://jestjs.io/docs/en/api#beforeallfn-timeout
+ */
 beforeAll(() => {
   database.start();
   /**
@@ -17,8 +20,15 @@ beforeAll(() => {
   });
 });
 
+/**
+ * Test block tests the ability to get a single user
+ */
 describe(`GET - /api/users/1`, () => {
   let data = {};
+  /**
+   * Runs before any test in this test block is run. Used to seed a user and to get authentication.
+   * @see https://jestjs.io/docs/en/api#beforeallfn-timeout
+   */
   beforeAll(() => {
     // Login the user
     return userSeeder
@@ -40,6 +50,7 @@ describe(`GET - /api/users/1`, () => {
   });
 
   it('should return the user successfully', async () => {
+    // Arrange
     await addressSeeder.seedAddress(1);
     const user = await database.knex('users').first();
     const address = await database
@@ -50,9 +61,13 @@ describe(`GET - /api/users/1`, () => {
       user,
       address
     };
+
+    // Act
     const response = await supertest
       .get(`/api/users/1`)
       .set('Authorization', `bearer ${data.token}`);
+
+    // Assert
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('user');
     expect(response.body).toHaveProperty('address');

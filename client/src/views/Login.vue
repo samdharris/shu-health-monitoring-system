@@ -41,9 +41,15 @@
 <script>
 export default {
   data: function() {
+    /**
+     * Contains the credentials inputted on the form
+     */
     return { email: '', password: '' };
   },
   methods: {
+    /**
+     * Handles form submission
+     */
     onSubmit() {
       this.$store
         .dispatch('login', {

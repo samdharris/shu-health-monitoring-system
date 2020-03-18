@@ -1,7 +1,15 @@
 const dataValidator = require('../validation/dataValidator');
 const integrationsService = require('../services/integrationsService');
 const httpCodes = require('http-status-codes');
-const jwt = require('jsonwebtoken');
+
+/**
+ * PUT - /api/integrations/:integrationId/data
+ *
+ * Updates the given integration reading with the provided value
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.updateData = async (req, res) => {
   try {
     const validatedData = await dataValidator.validateData(req.body);
@@ -16,6 +24,14 @@ exports.updateData = async (req, res) => {
   }
 };
 
+/**
+ * POST - /api/integrations/:integrationId/data
+ *
+ * Adds a given reading to the database
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.addData = async (req, res) => {
   try {
     const response = await integrationsService.addIntegrationData(
@@ -29,6 +45,14 @@ exports.addData = async (req, res) => {
   }
 };
 
+/**
+ * GET - /api/integrations/:userId
+ *
+ * Gets all integrations for a given user
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
 exports.viewData = async (req, res) => {
   try {
     const response = await integrationsService.getIntegrationsForUser(

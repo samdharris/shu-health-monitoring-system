@@ -1,12 +1,10 @@
-const app = require("../src/app");
-const supertest = require("supertest")(app);
-const userSeeder = require("../src/database/seeding/userSeeder");
-const integrationsSeeder = require("../src/database/seeding/integrationsSeeder");
-const database = require("../src/database");
-const { INTEGRATIONS } = require("../src/constants");
-const { ACCOUNT_TYPES } = require("../src/constants");
+const app = require('../src/app');
+const supertest = require('supertest')(app);
+const userSeeder = require('../src/database/seeding/userSeeder');
+const database = require('../src/database');
+const { ACCOUNT_TYPES } = require('../src/constants');
 
-const path = require("path");
+const path = require('path');
 
 beforeAll(() => {
   database.start();
@@ -14,12 +12,19 @@ beforeAll(() => {
    * Run migrations programatically. Works around an issue where they don't run on CI.
    */
   return database.knex.migrate.latest({
-    directory: path.join(__dirname, "../src/database/migrations")
+    directory: path.join(__dirname, '../src/database/migrations')
   });
 });
 
+/**
+ * Test block tests the ability to get a single patient
+ */
 describe(`GET - /api/patients/1`, () => {
   let data = {};
+  /**
+   * Runs before any test in this test block is run. Used to seed a user and to get authentication.
+   * @see https://jestjs.io/docs/en/api#beforeallfn-timeout
+   */
   beforeAll(() => {
     // Login the user
     return (
@@ -27,14 +32,14 @@ describe(`GET - /api/patients/1`, () => {
         //.seedPatient()
         .seedDoctor(1)
         .then(() => {
-          return database.knex("users").first();
+          return database.knex('users').first();
         })
         .then(user => {
           const body = {
             email: user.email_address,
             password: process.env.DUMMY_PASSWORD
           };
-          return supertest.post("/login").send(body);
+          return supertest.post('/login').send(body);
         })
         .then(({ body }) => {
           data.token = body.accessToken;
@@ -43,24 +48,27 @@ describe(`GET - /api/patients/1`, () => {
     );
   });
 
-  it("should return a user successfully", async () => {
+  it('should return a user successfully', async () => {
+    // Arrange
     await userSeeder.seedDoctor(1);
     const doc = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_DOCTOR)
+      .knex('users')
+      .where('account_type', ACCOUNT_TYPES.ACCOUNT_DOCTOR)
       .first();
     await userSeeder.seedPatient(1, doc.id);
     const patient = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_PATIENT)
+      .knex('users')
+      .where('account_type', ACCOUNT_TYPES.ACCOUNT_PATIENT)
       .first();
 
+    // Act
     const response = await supertest
       .get(`/api/patients/${doc.id}`)
-      .set("Authorization", `bearer ${data.token}`);
+      .set('Authorization', `bearer ${data.token}`);
+
+    // Assert
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("Patients");
-    console.log(response.body.Patients);
+    expect(response.body).toHaveProperty('Patients');
     expect(response.body.Patients[0]).toMatchObject(patient);
   });
 });
