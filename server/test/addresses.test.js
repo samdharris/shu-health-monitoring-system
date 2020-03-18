@@ -1,6 +1,8 @@
 const app = require("../src/app");
 const supertest = require("supertest")(app);
+const addressSeeder = require("../src/database/seeding/addressSeeder");
 const userSeeder = require("../src/database/seeding/userSeeder");
+const faker = require("faker");
 const database = require("../src/database");
 const { ACCOUNT_TYPES } = require("../src/constants");
 
@@ -17,9 +19,9 @@ beforeAll(() => {
 });
 
 /**
- * Test block tests the ability to get a single patient
+ * Test block tests the ability to get all addresses
  */
-describe(`GET - /api/patients/1`, () => {
+describe(`GET - /api/addresses`, () => {
   let data = {};
   /**
    * Runs before any test in this test block is run. Used to seed a user and to get authentication.
@@ -48,34 +50,25 @@ describe(`GET - /api/patients/1`, () => {
     );
   });
 
-  it("should return a user successfully", async () => {
+  it("should return all addresses", async () => {
     // Arrange
-    await userSeeder.seedDoctor(1);
-    const doc = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_DOCTOR)
-      .first();
-    await userSeeder.seedPatient(1, doc.id);
-    const patient = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_PATIENT)
-      .first();
+    await addressSeeder.seedAddress(2);
 
+    const address = await database.knex("addresses").first();
     // Act
     const response = await supertest
-      .get(`/api/patients/${doc.id}`)
+      .get(`/api/addresses`)
       .set("Authorization", `bearer ${data.token}`);
-
     // Assert
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("Patients");
-    expect(response.body.Patients[0]).toMatchObject(patient);
+    expect(response.body).toHaveProperty("addresses");
+    expect(response.body.addresses[0]).toMatchObject(address);
   });
 });
 /**
- * Test block tests the ability to get all patients
+ * Test block tests the ability to add an addresses
  */
-describe(`GET - /api/patients`, () => {
+describe(`POST - /api/addresses`, () => {
   let data = {};
   /**
    * Runs before any test in this test block is run. Used to seed a user and to get authentication.
@@ -104,24 +97,26 @@ describe(`GET - /api/patients`, () => {
     );
   });
 
-  it("should return all users successfully", async () => {
+  it("should create an address", async () => {
     // Arrange
-    await userSeeder.seedDoctor(1);
-    const doc = await database
-      .knex("users")
-      .where("account_type", ACCOUNT_TYPES.ACCOUNT_DOCTOR)
-      .first();
-    await userSeeder.seedPatient(1, doc.id);
-    const patient = await database.knex("users").first();
+    const address = {
+      address_line_1: faker.address.streetAddress(),
+      address_line_2: "",
+      address_line_3: "",
+      city: faker.address.city(),
+      county: faker.address.county(),
+      post_code: faker.address.zipCode()
+    };
 
     // Act
     const response = await supertest
-      .get(`/api/patients`)
-      .set("Authorization", `bearer ${data.token}`);
+      .post("/api/addresses")
+      .set("Authorization", `bearer ${data.token}`)
+      .send(address);
 
     // Assert
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("Patients");
-    expect(response.body.Patients[0]).toMatchObject(patient);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("address");
+    expect(response.body.address).toEqual(expect.objectContaining(address));
   });
 });
