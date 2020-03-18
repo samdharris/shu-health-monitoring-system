@@ -4,6 +4,7 @@ import axios from "axios";
 import router from "../router";
 import moment from "moment";
 import _ from "lodash";
+// import { addUser } from "../../../server/src/services/databaseService";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -327,6 +328,20 @@ export default new Vuex.Store({
     async addAddress({ commit }, address) {
       try {
         await axios.post("http://localhost:3001/api/addresses", address, {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("token")}`
+          }
+        });
+        router.go(-1);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit("showError", err.response.data.message);
+        }
+      }
+    },
+    async addUser({ commit }, user) {
+      try {
+        await axios.post("http://localhost:3001/api/users", user, {
           headers: {
             Authorization: `bearer ${localStorage.getItem("token")}`
           }

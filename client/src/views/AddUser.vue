@@ -7,7 +7,7 @@
           <router-link :to="`/controlPage`">Return </router-link>
         </div>
         <h2>Add New User</h2>
-        <form @submit.prevent="onSubmitNewUser">
+        <form @submit.prevent="onSubmit">
           <p>
             Name : {{ name }}
             <input v-model="name" placeholder="enter name" />
@@ -24,8 +24,8 @@
             Account Type:
             <select v-model="account_type">
               <option disabled value="">Please select type</option>
-              <option>Doctor</option>
-              <option>Patient</option>
+              <option value="ACCOUNT_DOCTOR">Doctor</option>
+              <option value="ACCOUNT_PATIENT">Patient</option>
             </select>
           </p>
           <p>

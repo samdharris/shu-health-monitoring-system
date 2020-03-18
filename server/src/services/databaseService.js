@@ -1,5 +1,6 @@
 const database = require("../database");
 const assert = require("assert");
+const bcrypt = require("bcryptjs");
 exports.addData = async (table, values) => {
   await database.knex(table).insert(values);
   return await database.knex(table).orderBy("id", "desc");
@@ -49,6 +50,26 @@ exports.updateData = async (
 };
 exports.addAddress = async (table, address) => {
   await database.knex(table).insert(address);
+  return await database
+    .knex(table)
+    .orderBy("id", "desc")
+    .first();
+};
+exports.addUser = async (table, user) => {
+  console.log(user);
+
+  const numRounds = parseInt(process.env.SALT_ROUNDS);
+  const password = await bcrypt.hash(
+    user.password,
+    await bcrypt.genSaltSync(numRounds)
+  );
+  if (user.doctor_id == "") {
+    user.doctor_id = null;
+  }
+  user.password = password;
+  console.log(user);
+
+  await database.knex(table).insert(user);
   return await database
     .knex(table)
     .orderBy("id", "desc")
