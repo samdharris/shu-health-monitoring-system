@@ -7,7 +7,7 @@
           <router-link :to="`/controlPage`">Return </router-link>
         </div>
         <h2>Add Address</h2>
-        <form @submit.prevent="onSubmitNewAddress">
+        <form @submit.prevent="onSubmit">
           Address :
           <p>
             {{ address_line_1 }}

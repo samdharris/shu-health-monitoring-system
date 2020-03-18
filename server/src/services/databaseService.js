@@ -1,15 +1,15 @@
-const database = require('../database');
-const assert = require('assert');
+const database = require("../database");
+const assert = require("assert");
 exports.addData = async (table, values) => {
   await database.knex(table).insert(values);
-  return await database.knex(table).orderBy('id', 'desc');
+  return await database.knex(table).orderBy("id", "desc");
 };
 
 exports.getIntegrationForUser = async (userId, integrationId) => {
   return await database
-    .knex('user_integrations')
-    .where('user_id', userId)
-    .where('integration_id', integrationId)
+    .knex("user_integrations")
+    .where("user_id", userId)
+    .where("integration_id", integrationId)
     .first();
 };
 
@@ -17,7 +17,7 @@ exports.addData = async (table, values) => {
   await database.knex(table).insert(values);
   return await database
     .knex(table)
-    .orderBy('id', 'desc')
+    .orderBy("id", "desc")
     .first();
 };
 exports.getData = async (table, query) => await query(database.knex(table));
@@ -45,5 +45,12 @@ exports.updateData = async (
   return await database
     .knex(tableName)
     .where(referenceColumn, refColumnValue)
+    .first();
+};
+exports.addAddress = async (table, address) => {
+  await database.knex(table).insert(address);
+  return await database
+    .knex(table)
+    .orderBy("id", "desc")
     .first();
 };

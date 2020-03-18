@@ -323,6 +323,20 @@ export default new Vuex.Store({
       } finally {
         commit("setLoading", false);
       }
+    },
+    async addAddress({ commit }, address) {
+      try {
+        await axios.post("http://localhost:3001/api/addresses", address, {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("token")}`
+          }
+        });
+        router.go(-1);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit("showError", err.response.data.message);
+        }
+      }
     }
   },
   modules: {}
