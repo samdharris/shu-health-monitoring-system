@@ -3,7 +3,9 @@ const supertest = require('supertest')(app);
 const userSeeder = require('../src/database/seeding/userSeeder');
 const integrationsSeeder = require('../src/database/seeding/integrationsSeeder');
 const database = require('../src/database');
-const { INTEGRATIONS } = require('../src/constants');
+const {
+  INTEGRATIONS
+} = require('../src/constants');
 
 const path = require('path');
 
@@ -44,7 +46,9 @@ describe('PUT - /api/integrations/1/data', () => {
         };
         return supertest.post('/login').send(body);
       })
-      .then(({ body }) => {
+      .then(({
+        body
+      }) => {
         data.token = body.accessToken;
         data.user = body.user;
       });
@@ -94,7 +98,9 @@ describe('GET - /api/1/integrations', () => {
         };
         return supertest.post('/login').send(body);
       })
-      .then(({ body }) => {
+      .then(({
+        body
+      }) => {
         data.token = body.accessToken;
         data.user = body.user;
       });
@@ -150,7 +156,9 @@ describe('POST - /api/integrations/1/data', () => {
         };
         return supertest.post('/login').send(body);
       })
-      .then(({ body }) => {
+      .then(({
+        body
+      }) => {
         data.token = body.accessToken;
         data.user = body.user;
       });
@@ -177,6 +185,7 @@ describe('POST - /api/integrations/1/data', () => {
     const reading = 6.0;
     const response = await supertest
       .post(`/api/integrations/${userIntegration.id}/data`)
+      .set(`Authorization`, `bearer ${data.token}`)
       .send({
         value: reading
       });
