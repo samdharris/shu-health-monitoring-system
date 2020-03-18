@@ -43,7 +43,9 @@ describe('POST - /api/appointments', () => {
         };
         return supertest.post('/login').send(body);
       })
-      .then(({ body }) => {
+      .then(({
+        body
+      }) => {
         data.token = body.accessToken;
         data.user = body.user;
       });
@@ -71,4 +73,41 @@ describe('POST - /api/appointments', () => {
       expect.objectContaining(appointment)
     );
   });
+
+  it('should return a 401 if a token isn\'t provided', async () => {
+    // Arrange
+    const date = new Date();
+    date.setMinutes(15, 0, 0);
+    const appointment = {
+      appointment_date: date.toISOString(),
+      reason: faker.lorem.sentence()
+    };
+
+    // Act
+    const response = await supertest
+      .post('/api/appointments')
+      .set('Authorization', ``)
+      .send(appointment);
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 401 if the token is invalid', async () => {
+    const date = new Date();
+    date.setMinutes(15, 0, 0);
+    const appointment = {
+      appointment_date: date.toISOString(),
+      reason: faker.lorem.sentence()
+    };
+
+    // Act
+    const response = await supertest
+      .post('/api/appointments')
+      .set('Authorization', `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`)
+      .send(appointment);
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
 });

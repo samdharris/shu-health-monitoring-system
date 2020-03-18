@@ -43,7 +43,9 @@ describe(`GET - /api/users/1`, () => {
         };
         return supertest.post('/login').send(body);
       })
-      .then(({ body }) => {
+      .then(({
+        body
+      }) => {
         data.token = body.accessToken;
         data.user = body.user;
       });
@@ -73,4 +75,24 @@ describe(`GET - /api/users/1`, () => {
     expect(response.body).toHaveProperty('address');
     expect(response.body).toMatchObject(expected);
   });
+
+  it('should return a 401 if a token isn\'t provided', async () => {
+    // Act
+    const response = await supertest
+      .post('/api/users/1')
+      .set('Authorization', ``)
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 401 if the token is invalid', async () => {
+    // Act
+    const response = await supertest
+      .post('/api/users/1')
+      .set('Authorization', `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`)
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
 });

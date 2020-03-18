@@ -73,6 +73,45 @@ describe('PUT - /api/integrations/1/data', () => {
     expect(response.status).toBe(200);
     expect(response.body.value).toBe(updatedValue);
   });
+
+  it('should throw a 401 if a token isn\'t provided', async () => {
+    // Arrange
+    await integrationsSeeder.seedIntegration(INTEGRATIONS[0]);
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedIntegrationData(1, data.user.id, 4);
+    const updatedValue = 5.4;
+
+    // Act
+    const response = await supertest
+      .put('/api/integrations/1/data')
+      .set('Authorization', ``)
+      .send({
+        value: updatedValue
+      });
+
+    // Assert
+    expect(response.status).toBe(401);
+  })
+
+  it('should throw a 401 if an invalid token is provided', async () => {
+    // Arrange
+    await integrationsSeeder.seedIntegration(INTEGRATIONS[0]);
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedIntegrationData(1, data.user.id, 4);
+    const updatedValue = 5.4;
+
+    // Act
+    const response = await supertest
+      .put('/api/integrations/1/data')
+      .set('Authorization', `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`)
+      .send({
+        value: updatedValue
+      });
+
+    // Assert
+    expect(response.status).toBe(401);
+  })
+
 });
 
 /**
@@ -131,6 +170,40 @@ describe('GET - /api/1/integrations', () => {
     expect(response.status).toBe(200);
     expect(response.body.integrations).toHaveLength(2);
   });
+
+  it('should return a 401 if a token is not provided', async () => {
+    // Arrange
+    INTEGRATIONS.forEach(
+      async integration => await integrationsSeeder.seedIntegration(integration)
+    );
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedUserIntegration(2, data.user.id);
+
+    // Act
+    const response = await supertest
+      .get(`/api/users/1/integrations`)
+      .set(`Authorization`, ``);
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 401 if the token is invalid', async () => {
+    // Arrange
+    INTEGRATIONS.forEach(
+      async integration => await integrationsSeeder.seedIntegration(integration)
+    );
+    await integrationsSeeder.seedUserIntegration(1, data.user.id);
+    await integrationsSeeder.seedUserIntegration(2, data.user.id);
+
+    // Act
+    const response = await supertest
+      .get(`/api/users/1/integrations`)
+      .set('Authorization', `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`)
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
 });
 
 /**
@@ -195,4 +268,45 @@ describe('POST - /api/integrations/1/data', () => {
     expect(response.body).toHaveProperty('value');
     expect(response.body.value).toBe(reading);
   });
+
+  it('should return a 401 if a token isn\'t provided', async () => {
+    // Arrange
+    await integrationsSeeder.seedIntegration(INTEGRATIONS[0]);
+    const userIntegration = await integrationsSeeder.seedUserIntegration(
+      1,
+      data.user.id
+    );
+
+    // Act
+    const reading = 6.0;
+    const response = await supertest
+      .post(`/api/integrations/${userIntegration.id}/data`)
+      .set(`Authorization`, ``)
+      .send({
+        value: reading
+      });
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
+
+  it('should return a 401 if the token is invalid', async () => {
+    await integrationsSeeder.seedIntegration(INTEGRATIONS[0]);
+    const userIntegration = await integrationsSeeder.seedUserIntegration(
+      1,
+      data.user.id
+    );
+
+    // Act
+    const reading = 6.0;
+    const response = await supertest
+      .post(`/api/integrations/${userIntegration.id}/data`)
+      .set('Authorization', `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`)
+      .send({
+        value: reading
+      });
+
+    // Assert
+    expect(response.status).toBe(401)
+  })
 });
