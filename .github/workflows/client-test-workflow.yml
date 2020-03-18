@@ -1,18 +1,37 @@
+# We use GitHub Actions for our continuous integration. We use GitHub's hosted runners for this. This workflow is aimed
+# at the client part of the application.
 name: Run Client test suite
+# This specifies when this workflow should be run. We only want it to run when a pull request is opened
 on: [pull_request]
 
+# A job is a set of tasks that are to be run then this workflow runs
 jobs:
+  # Here we specify the name of the job
   test:
+    # We specify which operating system this test should be run on. We choose Linux since if this was to be deployed, it
+    # would be hosted on server running Linx. For a list of supported see: https://help.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: ubuntu-latest
+    # This is the list of tasks that need to be completed in order for this specific job to pass. If any of these fail,
+    # the entire workflow fails.
     steps:
+      # A step can have many different actions associated with it. This first step tells the actions runner that we're
+      # wanting this job to run in a Node.js environment.
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
+          # Here we specify which version of Node.js to use. If we required, we could specify a Matrix of different Node.js versions
+          # and the remainder of this job would run on each individual version. For more, see: https://help.github.com/en/actions/language-and-framework-guides/using-nodejs-with-github-actions#starting-with-the-nodejs-workflow-template
           node-version: '12.x'
+        # Next, we install all dependencies that the server needs locking the version of each package in the process to
+        # avoid any unnecessary breaks because of something changing in a newer version of a package or one of the
+        # package's dependencies.
       - name: Install Dependencies
         run: yarn --frozen-lockfile
+        # Since the repository contains both the client and the server, we specify that this step should be run from
+        # within the client directory
         working-directory: ./client
+        # This step is the main step within this workflow. This step runs the test suite for the client.
       - name: Run Tests
         run: yarn test:unit
         working-directory: ./client
