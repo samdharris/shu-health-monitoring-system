@@ -10,13 +10,15 @@ import MakeAppointment from '../views/MakeAppointment.vue';
 import PatientList from '../views/PatientList.vue';
 import EditData from '../views/EditData.vue';
 import _ from 'lodash';
+import store from '../store'
+import axios from 'axios';
+
 Vue.use(VueRouter);
 
 /**
  * Application routes
  */
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'home',
     component: Home,
@@ -115,6 +117,20 @@ router.beforeEach((to, from, next) => {
   } else if (!canViewRouteWithAuth && !_.isNil(token)) {
     next('/');
   } else {
+    // send a request to the server to check this token is valid.
+    // if it's not valid, log the user out.
+    axios
+      .post("http://localhost:3001/verify", null, {
+        headers: {
+          Authorization: `bearer ${token}`
+        }
+      }).then(() => {
+        next();
+      }).catch(() => {
+        // logout
+        store.commit("logout");
+        next('/login')
+      });
     next();
   }
 });

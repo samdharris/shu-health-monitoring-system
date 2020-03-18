@@ -68,9 +68,10 @@ export default new Vuex.Store({
         i => i.slug === data.slug
       );
       if (_.isNil(integration.data)) {
-        integration.data = [
-          { ...data.value, value: parseFloat(data.value.value) }
-        ];
+        integration.data = [{
+          ...data.value,
+          value: parseFloat(data.value.value)
+        }];
       } else {
         integration.data.push({
           ...data.value,
@@ -104,7 +105,13 @@ export default new Vuex.Store({
      * @param {Object} user
      */
     login(state, user) {
-      state.loggedInUser = { ...user };
+      state.loggedInUser = {
+        ...user
+      };
+    },
+    logout(state) {
+      state.loggedInUser = {};
+      localStorage.removeItem("token");
     },
     /**
      * Sets the error message for displaying to the user
@@ -120,7 +127,9 @@ export default new Vuex.Store({
      * @param {Object} settings
      */
     applySettings(state, settings) {
-      state.settings = { ...settings };
+      state.settings = {
+        ...settings
+      };
     },
     /**
      * Sets the integrations for the currently viewed user
@@ -144,7 +153,9 @@ export default new Vuex.Store({
      * @param {Object} user
      */
     setCurrentlyViewedUser(state, user) {
-      state.userToView = { ...user };
+      state.userToView = {
+        ...user
+      };
     },
     /**
      * Sets the initial boot flag
@@ -179,22 +190,30 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Object} data
      */
-    async createReading({ commit }, data) {
+    async createReading({
+      commit
+    }, data) {
       try {
         await axios.post(
-          `http://localhost:3001/api/integrations/${data.userIntegrationId}/data`,
-          {
+          `http://localhost:3001/api/integrations/${data.userIntegrationId}/data`, {
             value: data.value
-          },
-          {
+          }, {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`
             }
           }
         );
 
-        commit('pushReading', { slug: data.slug, value: data.value });
+        commit('pushReading', {
+          slug: data.slug,
+          value: data.value
+        });
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -205,12 +224,13 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Object} appointment
      */
-    async makeAppointment({ commit }, appointment) {
+    async makeAppointment({
+      commit
+    }, appointment) {
       try {
         await axios.post(
           'http://localhost:3001/api/appointments',
-          appointment,
-          {
+          appointment, {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`
             }
@@ -218,6 +238,11 @@ export default new Vuex.Store({
         );
         router.go(-1);
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -228,7 +253,10 @@ export default new Vuex.Store({
      * @param {*} param0
      * @param {*} settings
      */
-    applySettings({ commit, state }, settings) {
+    applySettings({
+      commit,
+      state
+    }, settings) {
       localStorage.setItem('settings', JSON.stringify(settings));
       commit('applySettings', settings);
 
@@ -247,7 +275,9 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Object} loginDetails
      */
-    async login({ commit }, loginDetails) {
+    async login({
+      commit
+    }, loginDetails) {
       try {
         const response = await axios.post(
           'http://localhost:3001/login',
@@ -257,6 +287,11 @@ export default new Vuex.Store({
         localStorage.setItem('token', response.data.accessToken);
         router.push(`/patients/${response.data.user.id}`);
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -267,12 +302,13 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Number} userId
      */
-    async getUser({ commit }, userId) {
+    async getUser({
+      commit
+    }, userId) {
       try {
         commit('setLoading', true);
         const response = await axios.get(
-          `http://localhost:3001/api/users/${userId}`,
-          {
+          `http://localhost:3001/api/users/${userId}`, {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`
             }
@@ -288,6 +324,11 @@ export default new Vuex.Store({
           ...user
         });
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -301,12 +342,13 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Number} userId
      */
-    async getIntegrations({ commit }, userId) {
+    async getIntegrations({
+      commit
+    }, userId) {
       try {
         commit('setLoading', true);
         const response = await axios.get(
-          `http://localhost:3001/api/users/${userId}/integrations`,
-          {
+          `http://localhost:3001/api/users/${userId}/integrations`, {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`
             }
@@ -321,6 +363,11 @@ export default new Vuex.Store({
         });
         commit('setUserIntegrations', integrations);
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -334,12 +381,13 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Number} userId
      */
-    async getDocPatients({ commit }, userId) {
+    async getDocPatients({
+      commit
+    }, userId) {
       try {
         commit('setLoading', true);
         const response = await axios.get(
-          `http://localhost:3001/api/patients/${userId}`,
-          {
+          `http://localhost:3001/api/patients/${userId}`, {
             headers: {
               Authorization: `bearer ${localStorage.getItem('token')}`
             }
@@ -348,6 +396,11 @@ export default new Vuex.Store({
         const patients = response.data.Patients;
         commit('setDocPatients', patients);
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -361,11 +414,17 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Number} userId
      */
-    async getDataForIntegration({ commit }, userIntegrationId) {
+    async getDataForIntegration({
+      commit
+    }, userIntegrationId) {
       commit('setLoading', true);
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/userintegrations/${userIntegrationId}`
+          `http://localhost:3001/api/userintegrations/${userIntegrationId}`, {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem('token')}`
+            }
+          }
         );
         commit(
           'setCurrentlyViewedIntegrationData',
@@ -379,6 +438,11 @@ export default new Vuex.Store({
           })
         );
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
@@ -392,20 +456,28 @@ export default new Vuex.Store({
      * @param {Object} param0
      * @param {Number} userId
      */
-    async updateReading({ commit }, { id, value }) {
+    async updateReading({
+      commit
+    }, {
+      id,
+      value
+    }) {
       try {
         await axios.put(
-          `http://localhost:3001/api/integrations/${id}/data`,
-          {
+          `http://localhost:3001/api/integrations/${id}/data`, {
             value
-          },
-          {
+          }, {
             Authorization: `bearer ${localStorage.getItem('token')}`
           }
         );
 
         router.go(-1);
       } catch (err) {
+        if (err.response.status === 401) {
+          commit('logout');
+          router.push('/login');
+          return;
+        }
         if (!_.isNil(err.response.data)) {
           commit('showError', err.response.data.message);
         }
