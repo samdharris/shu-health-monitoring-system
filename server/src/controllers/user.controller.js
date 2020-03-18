@@ -45,3 +45,14 @@ exports.addUser = async (req, res) => {
     res.status(httpCodes.BAD_REQUEST).send();
   }
 };
+exports.assignDoctor = async (req, res) => {
+  try {
+    const response = await userService.assignDoctor({
+      ...req.body
+    });
+    res.status(httpCodes.CREATED).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(httpCodes.NOT_FOUND).json({ message: "User doesn't exist!" });
+  }
+};

@@ -4,6 +4,7 @@ import axios from "axios";
 import router from "../router";
 import moment from "moment";
 import _ from "lodash";
+// import { assignDoctor } from "../../../server/src/services/databaseService";
 // import { addUser } from "../../../server/src/services/databaseService";
 Vue.use(Vuex);
 
@@ -347,6 +348,23 @@ export default new Vuex.Store({
           }
         });
         router.go(-1);
+      } catch (err) {
+        if (!_.isNil(err.response.data)) {
+          commit("showError", err.response.data.message);
+        }
+      }
+    },
+    async assignDoctor({ commit }, values) {
+      try {
+        await axios.post(
+          `http://localhost:3001/api/users/${values.user_id}`,
+          values,
+          {
+            headers: {
+              Authorization: `bearer ${localStorage.getItem("token")}`
+            }
+          }
+        );
       } catch (err) {
         if (!_.isNil(err.response.data)) {
           commit("showError", err.response.data.message);

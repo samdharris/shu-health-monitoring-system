@@ -56,8 +56,6 @@ exports.addAddress = async (table, address) => {
     .first();
 };
 exports.addUser = async (table, user) => {
-  console.log(user);
-
   const numRounds = parseInt(process.env.SALT_ROUNDS);
   const password = await bcrypt.hash(
     user.password,
@@ -67,11 +65,16 @@ exports.addUser = async (table, user) => {
     user.doctor_id = null;
   }
   user.password = password;
-  console.log(user);
-
   await database.knex(table).insert(user);
   return await database
     .knex(table)
     .orderBy("id", "desc")
     .first();
+};
+exports.assignDoctor = async (table, values) => {
+  console.log(values.user_id, values.doctor_id);
+  return await database
+    .knex(table)
+    .where({ id: values.user_id })
+    .update({ doctor_id: values.doctor_id });
 };

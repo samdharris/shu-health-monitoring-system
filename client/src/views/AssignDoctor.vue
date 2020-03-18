@@ -7,10 +7,10 @@
           <router-link :to="`/controlPage`">Return </router-link>
         </div>
         <h2>Assign Patient's doctor</h2>
-        <form @submit.prevent="onSubmitAssignDoctor">
+        <form @submit.prevent="onSubmit">
           <p>
             Patient:
-            <select id="PatientChooser" v-model="patient_id" autocomplete="off">
+            <select id="PatientChooser" v-model="user_id" autocomplete="off">
               <option disabled value="">Choose a Patient</option>
               <option
                 v-for="item in $store.state.patients"
@@ -48,7 +48,7 @@
 export default {
   data() {
     return {
-      patient_id: null,
+      user_id: null,
       doctor_id: null
     };
   },
@@ -59,16 +59,16 @@ export default {
   },
   methods: {
     onSubmit() {
-      if (this.patient_id === null || this.doctor_id === null) {
+      if (this.user_id === null || this.doctor_id === null) {
         return;
       }
       this.$store
         .dispatch("assignDoctor", {
-          patient_id: this.patient_id,
+          user_id: this.user_id,
           doctor_id: this.doctor_id
         })
         .then(() => {
-          this.patient_id = "";
+          this.user_id = "";
           this.doctor_id = "";
         });
     }

@@ -7,5 +7,6 @@ router.get("/", controller.index);
 router.get("/:userId", controller.getUser);
 router.get("/:userId/integrations", dataController.viewData);
 router.post("/", controller.addUser);
+router.post("/:userid", controller.assignDoctor);
 
 module.exports = router;

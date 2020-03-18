@@ -5,3 +5,5 @@ exports.addUser = async user => {
     user: await userRepository.addUser(user)
   };
 };
+exports.assignDoctor = async values =>
+  await userRepository.assignDoctor(values);
