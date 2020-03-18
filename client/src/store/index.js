@@ -396,6 +396,10 @@ export default new Vuex.Store({
         const patients = response.data.Patients;
         commit('setDocPatients', patients);
       } catch (err) {
+        if (err.response.status === 403) {
+          router.go(-1);
+          return;
+        }
         if (err.response.status === 401) {
           commit('logout');
           router.push('/login');
