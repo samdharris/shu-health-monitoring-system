@@ -13,12 +13,13 @@ const integrationRoutes = require('./integration.routes');
 const userIntegrationRoutes = require('./userintegration.routes');
 const router = Router();
 
-// import the middleware
+// Imports the middleware
 const validateUser = require('../middleware/validateUser')
 const validateDoctor = require('../middleware/validateDoctor')
 
+// Calls validateUser to protect each route
 router.use('/api/users', validateUser, userRoutes);
-router.use('/api/patients', validateUser, validateDoctor, patientRoutes);
+router.use('/api/patients', validateUser, validateDoctor, patientRoutes); // Calls validateDoctor for viewing patients list to check if user is a doctor
 router.use('/api/appointments', validateUser, appointmentRoutes);
 router.use('/api/integrations', validateUser, integrationRoutes);
 router.use('/api/userintegrations', validateUser, userIntegrationRoutes);

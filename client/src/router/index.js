@@ -117,8 +117,8 @@ router.beforeEach((to, from, next) => {
   } else if (!canViewRouteWithAuth && !_.isNil(token)) {
     next('/');
   } else {
-    // send a request to the server to check this token is valid.
-    // if it's not valid, log the user out.
+    // Send a request to the server to check this token is valid.
+    // If it's not valid, log the user out.
     axios
       .post("http://localhost:3001/verify", null, {
         headers: {

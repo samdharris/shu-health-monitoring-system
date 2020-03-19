@@ -109,6 +109,7 @@ export default new Vuex.Store({
         ...user
       };
     },
+    // Logs user out by removing token from local storage
     logout(state) {
       state.loggedInUser = {};
       localStorage.removeItem("token");
@@ -209,6 +210,7 @@ export default new Vuex.Store({
           value: data.value
         });
       } catch (err) {
+        // If a 401 error is given then user is logged out and returns to login page
         if (err.response.status === 401) {
           commit('logout');
           router.push('/login');
@@ -396,6 +398,7 @@ export default new Vuex.Store({
         const patients = response.data.Patients;
         commit('setDocPatients', patients);
       } catch (err) {
+        // If error given is 403 when trying to view patients screen as a patient, user will be kicked out and returned to the previous page
         if (err.response.status === 403) {
           router.go(-1);
           return;
